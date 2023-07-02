@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Catalogue from "../../features/catalogue/Catalogue";
 import NavBar from "./NavBar";
 import { Container, CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
+import { Outlet } from "react-router-dom";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -10,9 +10,9 @@ function App() {
   const theme = createTheme({
     palette: {
       mode: paletteType,
-      background:{
-        default: paletteType === "light"? "#eeeeee" : "#121212"
-      }
+      background: {
+        default: paletteType === "light" ? "#eeeeee" : "#121212",
+      },
     },
   });
 
@@ -22,7 +22,7 @@ function App() {
         <CssBaseline />
         <NavBar setDarkMode={setDarkMode} />
         <Container>
-          <Catalogue />
+          <Outlet />
         </Container>
       </ThemeProvider>
     </>
