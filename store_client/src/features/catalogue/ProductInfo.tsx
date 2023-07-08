@@ -7,21 +7,21 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../../App/Models/Product";
+import agent from "../../App/api/agent";
 
 const ProductInfo = () => {
   const [product, setProduct] = useState<Product | null>();
   const [loading, setLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
   useEffect(() => {
-    axios
-      .get(`http://localhost:5009/api/products/${id}`)
-      .then((response) => setProduct(response.data))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+    id &&
+      agent.Catalogue.productInfo(parseInt(id))
+        .then((product) => setProduct(product))
+        .catch((error) => console.log(error))
+        .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <h2> Loading...</h2>;
@@ -45,7 +45,7 @@ const ProductInfo = () => {
             {"\u00A3"}
             {(product.price / 100).toFixed(2)}
           </Typography>
-          <TableContainer sx={{ml: -2, width: 200}}>
+          <TableContainer sx={{ ml: -2, width: 200 }}>
             <Table>
               <TableBody>
                 <TableRow sx={{ "& td": { border: 0 } }}>
