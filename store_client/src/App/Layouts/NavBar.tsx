@@ -36,8 +36,7 @@ const NavBar = ({ setDarkMode }: Props) => {
   const logList = [
     { title: "login", path: "/login" },
     { title: "register", path: "/register" },
-
-  ]
+  ];
   return (
     <AppBar position="static" sx={{ mb: 4 }}>
       <Toolbar sx={{ display: "flex" }}>
@@ -45,16 +44,20 @@ const NavBar = ({ setDarkMode }: Props) => {
 
         <List sx={{ ml: 2, display: "flex" }}>
           {sectionsList.map(({ title, path }) => (
-            <ListItem component={NavLink} to={path} 
-            sx={{
-                color:"inherit",
-                "&:hover":{
-                    color: "grey.400"
+            <ListItem
+              component={NavLink}
+              to={path}
+              key={title}
+              sx={{
+                color: "inherit",
+                "&:hover": {
+                  color: "grey.400",
                 },
-                "&:active":{
-                    color:"action.active"
-                }
-            }}>
+                "&:active": {
+                  color: "action.active",
+                },
+              }}
+            >
               {title.toUpperCase()}
             </ListItem>
           ))}
@@ -66,23 +69,25 @@ const NavBar = ({ setDarkMode }: Props) => {
             label={checkLabel}
           />
         </FormGroup>
-        <Container sx={{display: "flex", justifyContent: "flex-end"}}>
-        <List sx={{ ml: 2, display: "flex" }}>
-          {logList.map(({ title, path }) => (
-            <ListItem
-            sx={{
-                color:"inherit",
-                "&:hover":{
-                    color: "secondary.main"
-                },
-                "&:active":{
-                    color:"text.secondary"
-                }
-            }}>
-              {title.toUpperCase()}
-            </ListItem>
-          ))}
-        </List>
+        <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <List sx={{ ml: 2, display: "flex" }}>
+            {logList.map(({ title, path }) => (
+              <ListItem
+                key={title}
+                sx={{
+                  color: "inherit",
+                  "&:hover": {
+                    color: "secondary.main",
+                  },
+                  "&:active": {
+                    color: "text.secondary",
+                  },
+                }}
+              >
+                {title.toUpperCase()}
+              </ListItem>
+            ))}
+          </List>
           <IconButton
             size="large"
             aria-label="show 17 new notifications"
