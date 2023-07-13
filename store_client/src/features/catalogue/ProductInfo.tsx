@@ -11,6 +11,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../../App/Models/Product";
 import agent from "../../App/api/agent";
+import NotFound from "../../App/errors/NotFound";
+import LoadingBox from "../../App/Layouts/LoadingBox";
 
 const ProductInfo = () => {
   const [product, setProduct] = useState<Product | null>();
@@ -24,8 +26,8 @@ const ProductInfo = () => {
         .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <h2> Loading...</h2>;
-  if (!product) return <h2>Product not found</h2>;
+  if (loading) return <LoadingBox message="Loading Product..." />;
+  if (!product) return <NotFound />;
   return (
     <>
       <Grid container spacing={20}>

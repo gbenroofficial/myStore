@@ -73,6 +73,8 @@ const NavBar = ({ setDarkMode }: Props) => {
           <List sx={{ ml: 2, display: "flex" }}>
             {logList.map(({ title, path }) => (
               <ListItem
+                component={NavLink}
+                to={path}
                 key={title}
                 sx={{
                   color: "inherit",

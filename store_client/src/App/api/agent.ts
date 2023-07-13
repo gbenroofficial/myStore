@@ -2,14 +2,15 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Router";
 
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
+
 axios.defaults.baseURL = "http://localhost:5009/api/";
 
 const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.response.use(
-  function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
+  async function (response) {
+    await sleep();
     return response;
   },
   function (error: AxiosError) {
@@ -17,20 +18,23 @@ axios.interceptors.response.use(
 
     switch (status) {
       case 400:
-        if(data.errors){
-            const modelStateErrors: string[] = [];
-            for(const key in data.errors){
-                modelStateErrors.push(data.errors[key])
-            }
-            throw modelStateErrors.flat()
+        if (data.errors) {
+          const modelStateErrors: string[] = [];
+          for (const key in data.errors) {
+            modelStateErrors.push(data.errors[key]);
+          }
+          throw modelStateErrors.flat();
         }
         toast.error(data.title);
         break;
       case 401:
         toast.error(data.title);
         break;
+      case 404:
+        router.navigate("/not-found");
+        break;
       case 500:
-        router.navigate("/server-error", {state:{error: data}});
+        router.navigate("/server-error", { state: { error: data } });
         break;
       default:
         break;
