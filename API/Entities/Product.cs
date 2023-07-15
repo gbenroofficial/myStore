@@ -11,5 +11,8 @@ namespace API.Entities
         public string Brand { get; set; }
         public int StockQuantity { get; set; }
 
+        #nullable enable
+        public BasketItem BasketItem { get; set; }
+
     }
 }
