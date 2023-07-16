@@ -9,18 +9,7 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public string OwnerId { get; set; }
-        public List<BasketItem> Items { get; set; } = new ();
-        
-        
-
-        
-        
-        
-        
-        
-        
-        
-        
+        public List<BasketItem> Items { get; set; } = new ();  
         
         
         
