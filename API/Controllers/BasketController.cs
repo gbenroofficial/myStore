@@ -38,7 +38,7 @@ namespace API.Controllers
             if(product == null) return NotFound();
 
             basket.AddItem(product);
-            
+
             var result = await _context.SaveChangesAsync() > 0;
 
             if(result) return StatusCode(201);
@@ -55,6 +55,7 @@ namespace API.Controllers
             var buyerId = Guid.NewGuid().ToString();
             var cookieOptions = new CookieOptions{IsEssential=true, Expires = DateTime.Now.AddDays(30)};
             Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+            
             var basket = new Basket{OwnerId = buyerId};
             _context.Baskets.Add(basket);
             return basket;
