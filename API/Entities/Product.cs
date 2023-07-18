@@ -12,6 +12,7 @@ namespace API.Entities
         public int StockQuantity { get; set; }
 
         #nullable enable
+        
         public BasketItem BasketItem { get; set; }
 
     }

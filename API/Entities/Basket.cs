@@ -9,6 +9,8 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public string OwnerId { get; set; }
+
+        //nav opt
         public List<BasketItem> Items { get; set; } = new ();  
         
         
@@ -20,7 +22,7 @@ namespace API.Entities
             }
             else{Items.Add(new BasketItem {Id = product.Id, Quantity = 1});}
         }
-
+        
         public void RemoveItem(Product product){
             var itemIndex = Items.FindIndex(item => item.Id == product.Id);
             if(itemIndex != -1){
