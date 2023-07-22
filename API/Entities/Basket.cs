@@ -30,5 +30,14 @@ namespace API.Entities
             }
             return;
         }
+
+        public void updateItem(Product product, int quantity){
+            var item = Items.Find(item => item.Id == product.Id);
+            if(item != null){
+                item.Quantity = quantity;
+            }
+            else{Items.Add(new BasketItem {Id = product.Id, Quantity = quantity});}
+
+        }
     }
 }

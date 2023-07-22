@@ -58,6 +58,39 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails{Title = "Could not save item to basket"});     
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> removeBasketItem(int productId){
+            var basket = await findBasket();
+            if(basket == null) return NotFound();
+
+            var product = await _context.Products.FindAsync(productId);
+            if(product == null) return NotFound();
+
+            basket.RemoveItem(product);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if(result) return StatusCode(201);
+            return BadRequest(new ProblemDetails{Title = "problem encountered with deleting item from basket"});    
+
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> updateItemQuantity(int productId, [FromBody] int quantity){
+            var basket = await findBasket();
+            if(basket == null) return NotFound();
+
+             var product = await _context.Products.FindAsync(productId);
+            if(product == null) return NotFound();
+
+            basket.updateItem(product, quantity);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if(result) return StatusCode(201);
+            return BadRequest(new ProblemDetails{Title = "problem encountered with updating item quantity"});
+        }
+
         private async Task<Basket> findBasket(){
             return await _context.Baskets
                 .Include(i => i.Items)
