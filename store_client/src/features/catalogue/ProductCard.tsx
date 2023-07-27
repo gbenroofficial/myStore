@@ -8,13 +8,22 @@ import {
   Avatar,
   Button,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Product } from "../../App/Models/Product";
 import { Link } from "react-router-dom";
+import agent from "../../App/api/agent";
+import { LoadingButton } from "@mui/lab";
 interface Props {
   product: Product;
 }
 const ProductCard = ({ product }: Props) => {
+  const[loading, setLoading] = useState(false);
+
+  function addItem(productId: number){
+    setLoading(true);
+    agent.Basket.addItem(productId).catch(error => {}).finally(() => setLoading(false))
+  }
+
   return (
     <>
       <Card key={product.id} sx={{ maxWidth: 345 }}>
@@ -40,7 +49,7 @@ const ProductCard = ({ product }: Props) => {
         </CardContent>
 
         <CardActions>
-          <Button size="small">Add to cart</Button>
+          <LoadingButton onClick={()=> addItem(product.id)} size="small" loading={loading}>Add to cart</LoadingButton>
           <Button component={Link} to={`/catalogue/${product.id}`} size="small">View</Button>
         </CardActions>
       </Card>

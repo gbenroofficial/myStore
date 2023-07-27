@@ -19,7 +19,7 @@ namespace API.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> getBasket()
         {
             Basket basket = await findBasket();
@@ -27,17 +27,24 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-            return new BasketDto{
+            return BasketToDto(basket);
+        }
+
+        private BasketDto BasketToDto(Basket basket)
+        {
+            return new BasketDto
+            {
                 Id = basket.Id,
                 OwnerId = basket.OwnerId,
-                Items = basket.Items.Select(item => new BasketItemDto{
+                Items = basket.Items.Select(item => new BasketItemDto
+                {
                     ProductId = item.Product.Id,
                     Name = item.Product.Name,
                     Price = item.Product.Price,
                     PictureUrl = item.Product.PictureUrl,
                     Brand = item.Product.Brand,
                     Type = item.Product.Type,
-                    Quantity = item.Quantity                    
+                    Quantity = item.Quantity
                 }).ToList()
             };
         }
@@ -54,7 +61,7 @@ namespace API.Controllers
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if(result) return StatusCode(201);
+            if(result) return CreatedAtRoute("GetBasket", BasketToDto(basket));
             return BadRequest(new ProblemDetails{Title = "Could not save item to basket"});     
         }
 
@@ -75,15 +82,15 @@ namespace API.Controllers
 
         }
 
-        [HttpPut]
-        public async Task<ActionResult> updateItemQuantity(int productId, [FromBody] int quantity){
+        [HttpPut("item/{productId}/quantity/{quantity}")]
+        public async Task<ActionResult> updateItemQuantity(int productId, int quantity){
             var basket = await findBasket();
             if(basket == null) return NotFound();
 
              var product = await _context.Products.FindAsync(productId);
             if(product == null) return NotFound();
 
-            basket.updateItem(product, quantity);
+            basket.updateItemQuantity(product, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
 

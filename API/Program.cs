@@ -25,9 +25,9 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors(
     opt => {
-        opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-    }
-);
+        opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000").SetPreflightMaxAge(TimeSpan.FromMinutes(10)); // Adjust the max age as needed
+});
+    
 app.UseAuthorization();
 
 app.MapControllers();

@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 interface Props {
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -94,6 +94,9 @@ const NavBar = ({ setDarkMode }: Props) => {
             size="large"
             aria-label="show 17 new notifications"
             color="inherit"
+            component={Link}
+            to="/basket"
+            
           >
             <Badge badgeContent={17} color="error">
               <ShoppingCartIcon />
