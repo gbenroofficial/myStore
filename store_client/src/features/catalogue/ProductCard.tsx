@@ -13,15 +13,17 @@ import { Product } from "../../App/Models/Product";
 import { Link } from "react-router-dom";
 import agent from "../../App/api/agent";
 import { LoadingButton } from "@mui/lab";
+import { useStoreContext } from "../../App/context/StoreContext";
 interface Props {
   product: Product;
 }
 const ProductCard = ({ product }: Props) => {
   const[loading, setLoading] = useState(false);
+  const {setBasket} = useStoreContext();
 
   function addItem(productId: number){
     setLoading(true);
-    agent.Basket.addItem(productId).catch(error => {}).finally(() => setLoading(false))
+    agent.Basket.addItem(productId).then(basket => setBasket(basket)).catch(error => {}).finally(() => setLoading(false))
   }
 
   return (

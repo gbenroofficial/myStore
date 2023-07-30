@@ -77,7 +77,7 @@ namespace API.Controllers
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if(result) return StatusCode(201);
+             if(result) return Ok(BasketToDto(basket));
             return BadRequest(new ProblemDetails{Title = "problem encountered with deleting item from basket"});    
 
         }
@@ -90,11 +90,12 @@ namespace API.Controllers
              var product = await _context.Products.FindAsync(productId);
             if(product == null) return NotFound();
 
+        
             basket.updateItemQuantity(product, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if(result) return StatusCode(201);
+            if(result) return Ok(BasketToDto(basket));
             return BadRequest(new ProblemDetails{Title = "problem encountered with updating item quantity"});
         }
 

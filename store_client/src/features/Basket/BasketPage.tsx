@@ -1,30 +1,42 @@
-import React, { useEffect, useState } from "react";
 import agent from "../../App/api/agent";
-import LoadingBox from "../../App/Layouts/LoadingBox";
 import {
   CardMedia,
+  Container,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { Basket, BasketItem } from "../../App/Models/Basket";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { BasketItem } from "../../App/Models/Basket";
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { useStoreContext } from "../../App/context/StoreContext";
+import BasketSummary from "./BasketSummary";
+import { formatCurrency } from "../../App/util/util";
 
 const BasketPage = () => {
-  const [basket, setBasket] = useState<Basket>();
-  const [loading, setLoading] = useState(true);
+  const { basket, setBasket } = useStoreContext();
 
-  
+  function handleQuantityChange(e: SelectChangeEvent<any>, id: number) {
+    const newQuantity = e.target.value;
+    agent.Basket.updateItem(id, parseInt(newQuantity))
+      .then((basket) => {
+        setBasket(basket);
+      })
+      .catch(() => {});
+  }
 
-  useEffect(() => {
-    agent.Basket.get()
-      .then((basket) => setBasket(basket))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
-  if (loading) return <LoadingBox message="Loading items..." />;
+  function handleItemDelete(id: number) {
+    agent.Basket.removeItem(id)
+      .then((basket) => {
+        setBasket(basket);
+      })
+      .catch(() => {});
+  }
+
   if (!basket)
     return <Typography variant="h3">Your basket is empty</Typography>;
 
@@ -36,16 +48,24 @@ const BasketPage = () => {
       renderCell: (params) => (
         <CardMedia
           component="img"
-          sx={{ height: "90%", backgroundSize: "fill" }}
+          sx={{ height: "90%", width:"70%", backgroundSize: "fill" }}
           image={params.value}
         />
       ),
     },
     { field: "name", headerName: "Product", width: 300 },
     {
+      field: "price",
+      headerName: "Price",
+      type: "number",
+      width: 90,
+      valueGetter: (params) => formatCurrency(params.value),
+    },
+    {
       field: "quantity",
       headerName: "Quantity",
       width: 200,
+
       renderCell: (params) => (
         <>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -53,23 +73,42 @@ const BasketPage = () => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={10}
+              value={params.row.quantity}
               label="Age"
+              onChange={(e) => handleQuantityChange(e, params.id as number)}
             >
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((quantity) => (
+                <MenuItem key={quantity} value={quantity}>
+                  {quantity}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </>
       ),
     },
     {
-      field: "price",
-      headerName: "Price",
+      field: "subtotal",
+      headerName: "Subtotal",
       type: "number",
-      width: 90,
-      valueGetter: (params) => "\u00A3" + params.value / 100,
+      width: 100,
+      valueGetter: (params) =>
+        "\u00A3" + (params.row.price * params.row.quantity) / 100,
+    },
+
+    {
+      field: "custom",
+      headerName: "",
+      width: 250,
+      renderCell: (params) => (
+        <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <FormControl>
+            <IconButton aria-label="delete" color="error" onClick={()=>handleItemDelete(params.id as number)}>
+              <DeleteIcon />
+            </IconButton>
+          </FormControl>
+        </Container>
+      ),
     },
   ];
 
@@ -79,13 +118,17 @@ const BasketPage = () => {
       <div style={{ height: 800, width: "100%" }}>
         <DataGrid
           rows={basket.items}
-          rowHeight={100}
+          rowHeight={70}
+          autoHeight
           columns={columns}
           pageSizeOptions={[5, 10]}
           checkboxSelection
           getRowId={getRowId}
+          sx={{bgcolor: "white"}}
         />
+        <BasketSummary />
       </div>
+      
     </>
   );
 };

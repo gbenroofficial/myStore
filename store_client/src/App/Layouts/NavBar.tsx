@@ -14,6 +14,7 @@ import {
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useStoreContext } from "../context/StoreContext";
 interface Props {
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -37,8 +38,12 @@ const NavBar = ({ setDarkMode }: Props) => {
     { title: "login", path: "/login" },
     { title: "register", path: "/register" },
   ];
+
+  const { basket } = useStoreContext();
+  const itemsCount = basket?.items?.reduce((prevSum, item) => prevSum + item.quantity, 0)
+  
   return (
-    <AppBar position="static" sx={{ mb: 4 }}>
+    <AppBar position="sticky" sx={{ mb: 4 }}>
       <Toolbar sx={{ display: "flex" }}>
         <Typography variant="h6">Soso Store</Typography>
 
@@ -96,9 +101,8 @@ const NavBar = ({ setDarkMode }: Props) => {
             color="inherit"
             component={Link}
             to="/basket"
-            
           >
-            <Badge badgeContent={17} color="error">
+            <Badge badgeContent={itemsCount} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
