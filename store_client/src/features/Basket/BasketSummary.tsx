@@ -5,7 +5,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Typography,
 } from "@mui/material";
 import { useStoreContext } from "../../App/context/StoreContext";
 import { formatCurrency } from "../../App/util/util";
@@ -17,7 +16,7 @@ export default function BasketSummary() {
     0
   )!;
   const deliveryFee = subTotal / 100 > 100 ? 0 : 500;
-  
+
   return (
     <div style={{ display: "flex", justifyContent: "flex-end" }}>
       <TableContainer
@@ -37,7 +36,9 @@ export default function BasketSummary() {
             </TableRow>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
-              <TableCell align="right">{formatCurrency(subTotal + deliveryFee)}</TableCell>
+              <TableCell align="right">
+                {formatCurrency(subTotal + deliveryFee)}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
