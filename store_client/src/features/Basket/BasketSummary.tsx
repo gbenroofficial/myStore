@@ -19,11 +19,7 @@ export default function BasketSummary() {
 
   return (
     <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <TableContainer
-        component={Paper}
-        variant={"outlined"}
-        sx={{ width: "50%" }}
-      >
+      <TableContainer component={Paper} variant={"outlined"}>
         <Table>
           <TableBody>
             <TableRow>

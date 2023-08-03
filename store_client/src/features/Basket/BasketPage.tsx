@@ -1,8 +1,10 @@
 import agent from "../../App/api/agent";
 import {
+  Button,
   CardMedia,
   Container,
   FormControl,
+  Grid,
   IconButton,
   InputLabel,
   MenuItem,
@@ -16,6 +18,7 @@ import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { useStoreContext } from "../../App/context/StoreContext";
 import BasketSummary from "./BasketSummary";
 import { formatCurrency } from "../../App/util/util";
+import { Link } from "react-router-dom";
 
 const BasketPage = () => {
   const { basket, setBasket } = useStoreContext();
@@ -48,7 +51,7 @@ const BasketPage = () => {
       renderCell: (params) => (
         <CardMedia
           component="img"
-          sx={{ height: "90%", width:"70%", backgroundSize: "fill" }}
+          sx={{ height: "90%", width: "70%", backgroundSize: "fill" }}
           image={params.value}
         />
       ),
@@ -103,7 +106,11 @@ const BasketPage = () => {
       renderCell: (params) => (
         <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
           <FormControl>
-            <IconButton aria-label="delete" color="error" onClick={()=>handleItemDelete(params.id as number)}>
+            <IconButton
+              aria-label="delete"
+              color="error"
+              onClick={() => handleItemDelete(params.id as number)}
+            >
               <DeleteIcon />
             </IconButton>
           </FormControl>
@@ -124,11 +131,23 @@ const BasketPage = () => {
           pageSizeOptions={[5, 10]}
           checkboxSelection
           getRowId={getRowId}
-          sx={{bgcolor: "white"}}
+          sx={{ bgcolor: "white" }}
         />
-        <BasketSummary />
+        <Grid container sx={{mt: 1}}>
+          <Grid item xs={6} />
+          <Grid item xs={6}>
+            <BasketSummary />
+            <Button
+              component={Link}
+              to="/checkout"
+              variant="contained"
+              size="large"
+              fullWidth
+              sx={{mt: 1}}
+            >Checkout</Button>
+          </Grid>
+        </Grid>
       </div>
-      
     </>
   );
 };
