@@ -8,10 +8,9 @@ import "@fontsource/roboto/700.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./App/router/Router";
 import { StoreContextProvider } from "./App/context/StoreContext";
-import { configureStore } from "./App/store/configureStore";
 import { Provider } from "react-redux";
+import { store } from "./App/store/configureStore";
 
-const store = configureStore();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

@@ -1,10 +1,10 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux/es/exports";
-import { CounterState, DECREMENT_COUNT, INCREMENT_COUNT, decrement, increment } from "./counterReducer";
 import { Button, ButtonGroup, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
+import { decrement, increment } from "./counterSlice";
+
 const Contact = () => {
-  const dispatch = useDispatch();
-  const { data, title } = useSelector((state: CounterState) => state);
+  const dispatch = useAppDispatch();
+  const { data, title } = useAppSelector((state) => state.counter);
   return (
     <>
       <Typography variant="h2">{title}</Typography>
@@ -12,14 +12,14 @@ const Contact = () => {
       <ButtonGroup>
         <Button
           onClick={() => {
-            dispatch(decrement());
+            dispatch(decrement(1));
           }}
         >
           Decrement
         </Button>
         <Button
           onClick={() => {
-            dispatch(increment());
+            dispatch(increment(1));
           }}
         >
           Increment
