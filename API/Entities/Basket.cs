@@ -31,7 +31,7 @@ namespace API.Entities
             return;
         }
 
-        public void updateItemQuantity(Product product, int quantity){
+        public void UpdateItemQuantity(Product product, int quantity){
             var item = Items.Find(item => item.Id == product.Id);
             if(item != null){
                 item.Quantity = quantity;

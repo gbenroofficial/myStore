@@ -20,9 +20,9 @@ namespace API.Controllers
         }
 
         [HttpGet(Name = "GetBasket")]
-        public async Task<ActionResult<BasketDto>> getBasket()
+        public async Task<ActionResult<BasketDto>> GetBasket()
         {
-            Basket basket = await findBasket();
+            Basket basket = await FindBasket();
             if (basket == null)
             {
                 return NotFound();
@@ -50,9 +50,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> addBasketItem(int productId){
-            var basket = await findBasket();
-            if(basket == null){basket = createBasket();}
+        public async Task<ActionResult> AddBasketItem(int productId){
+            var basket = await FindBasket();
+            if(basket == null){basket = CreateBasket();}
 
             var product = await _context.Products.FindAsync(productId); //pry key
             if(product == null) return NotFound();
@@ -66,8 +66,8 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> removeBasketItem(int productId){
-            var basket = await findBasket();
+        public async Task<ActionResult> RemoveBasketItem(int productId){
+            var basket = await FindBasket();
             if(basket == null) return NotFound();
 
             var product = await _context.Products.FindAsync(productId);
@@ -83,15 +83,15 @@ namespace API.Controllers
         }
 
         [HttpPut("item/{productId}/quantity/{quantity}")]
-        public async Task<ActionResult> updateItemQuantity(int productId, int quantity){
-            var basket = await findBasket();
+        public async Task<ActionResult> UpdateItemQuantity(int productId, int quantity){
+            var basket = await FindBasket();
             if(basket == null) return NotFound();
 
              var product = await _context.Products.FindAsync(productId);
             if(product == null) return NotFound();
 
         
-            basket.updateItemQuantity(product, quantity);
+            basket.UpdateItemQuantity(product, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
 
@@ -99,13 +99,13 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails{Title = "problem encountered with updating item quantity"});
         }
 
-        private async Task<Basket> findBasket(){
+        private async Task<Basket> FindBasket(){
             return await _context.Baskets
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
                 .FirstOrDefaultAsync(x => x.OwnerId == Request.Cookies["buyerId"]); //not pry key
         }
-        private Basket createBasket(){
+        private Basket CreateBasket(){
             var buyerId = Guid.NewGuid().ToString();
             var cookieOptions = new CookieOptions{IsEssential=true, Expires = DateTime.Now.AddDays(30)};
             Response.Cookies.Append("buyerId", buyerId, cookieOptions);
