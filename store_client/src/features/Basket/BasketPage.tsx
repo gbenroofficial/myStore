@@ -15,28 +15,28 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { BasketItem } from "../../App/Models/Basket";
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
-import { useStoreContext } from "../../App/context/StoreContext";
 import BasketSummary from "./BasketSummary";
 import { formatCurrency } from "../../App/util/util";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
+import { deleteItem, setBasket } from "./basketSlice";
 
 const BasketPage = () => {
-  const { basket, setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
+  const { basket } = useAppSelector((state) => state.basket);
 
   function handleQuantityChange(e: SelectChangeEvent<any>, id: number) {
     const newQuantity = e.target.value;
     agent.Basket.updateItem(id, parseInt(newQuantity))
       .then((basket) => {
-        setBasket(basket);
+        dispatch(setBasket(basket));
       })
       .catch(() => {});
   }
 
   function handleItemDelete(id: number) {
     agent.Basket.removeItem(id)
-      .then((basket) => {
-        setBasket(basket);
-      })
+      .then(() => dispatch(deleteItem(id)))
       .catch(() => {});
   }
 
@@ -133,7 +133,7 @@ const BasketPage = () => {
           getRowId={getRowId}
           sx={{ bgcolor: "white" }}
         />
-        <Grid container sx={{mt: 1}}>
+        <Grid container sx={{ mt: 1 }}>
           <Grid item xs={6} />
           <Grid item xs={6}>
             <BasketSummary />
@@ -143,8 +143,10 @@ const BasketPage = () => {
               variant="contained"
               size="large"
               fullWidth
-              sx={{mt: 1}}
-            >Checkout</Button>
+              sx={{ mt: 1 }}
+            >
+              Checkout
+            </Button>
           </Grid>
         </Grid>
       </div>

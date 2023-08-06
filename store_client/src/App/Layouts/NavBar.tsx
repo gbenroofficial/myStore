@@ -14,7 +14,7 @@ import {
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 interface Props {
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -39,9 +39,13 @@ const NavBar = ({ setDarkMode }: Props) => {
     { title: "register", path: "/register" },
   ];
 
-  const { basket } = useStoreContext();
-  const itemsCount = basket?.items?.reduce((prevSum, item) => prevSum + item.quantity, 0)
-  
+  const { basket } = useAppSelector((state)=> state.basket);
+
+  const itemsCount = basket?.items?.reduce(
+    (prevSum, item) => prevSum + item.quantity,
+    0
+  );
+
   return (
     <AppBar position="sticky" sx={{ mb: 4 }}>
       <Toolbar sx={{ display: "flex" }}>

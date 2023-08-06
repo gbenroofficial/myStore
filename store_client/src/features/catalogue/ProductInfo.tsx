@@ -17,12 +17,14 @@ import { Product } from "../../App/Models/Product";
 import agent from "../../App/api/agent";
 import NotFound from "../../App/errors/NotFound";
 import LoadingBox from "../../App/Layouts/LoadingBox";
-import { useStoreContext } from "../../App/context/StoreContext";
-import { LoadingButton } from "@mui/lab";
 
+import { LoadingButton } from "@mui/lab";
+import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
+import { deleteItem, setBasket } from "../Basket/basketSlice";
 
 const ProductInfo = () => {
-  const { basket, setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
+  const { basket } = useAppSelector((state) => state.basket);
   const [product, setProduct] = useState<Product | null>();
   const [loading, setLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
@@ -42,19 +44,16 @@ const ProductInfo = () => {
   function handleQuantityChange(e: any) {
     if (e.target.value >= 0) {
       setCartCount(e.target.value);
-      
     }
   }
 
   function handleCartUpdate() {
-    console.log("update first")
-    if ((cartCount >= 0) && product) {
-      console.log(cartCount);
+    if (cartCount >= 0 && product) {
       setSubmitting(true);
       if (cartCount === 0 && item) {
         agent.Basket.removeItem(item.productId)
-          .then((basket) => {
-            setBasket(basket);
+          .then(() => {
+            dispatch(deleteItem(basket));
           })
           .catch(() => {})
           .finally(() => {
@@ -62,7 +61,7 @@ const ProductInfo = () => {
           });
       } else {
         agent.Basket.updateItem(product.id, cartCount)
-          .then((basket) => setBasket(basket))
+          .then((basket) => dispatch(setBasket(basket)))
           .catch(() => {})
           .finally(() => {
             setSubmitting(false);
@@ -134,7 +133,9 @@ const ProductInfo = () => {
                 fullWidth
                 onClick={handleCartUpdate}
                 loading={submitting}
-                disabled={item?.quantity === cartCount || (!item && (cartCount === 0))}
+                disabled={
+                  item?.quantity === cartCount || (!item && cartCount === 0)
+                }
               >
                 {item ? "Update Quantity" : "Add item to Cart"}
               </LoadingButton>
