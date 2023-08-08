@@ -20,7 +20,7 @@ import LoadingBox from "../../App/Layouts/LoadingBox";
 
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
-import { deleteItem, setBasket } from "../Basket/basketSlice";
+import { setBasket } from "../Basket/basketSlice";
 
 const ProductInfo = () => {
   const dispatch = useAppDispatch();
@@ -49,11 +49,12 @@ const ProductInfo = () => {
 
   function handleCartUpdate() {
     if (cartCount >= 0 && product) {
+      console.log(cartCount);
       setSubmitting(true);
       if (cartCount === 0 && item) {
         agent.Basket.removeItem(item.productId)
           .then(() => {
-            dispatch(deleteItem(basket));
+            dispatch(setBasket(basket));
           })
           .catch(() => {})
           .finally(() => {

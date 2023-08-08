@@ -4,8 +4,7 @@ import {
   CardMedia,
   Container,
   FormControl,
-  Grid,
-  IconButton,
+  Grid, 
   InputLabel,
   MenuItem,
   Select,
@@ -19,11 +18,13 @@ import BasketSummary from "./BasketSummary";
 import { formatCurrency } from "../../App/util/util";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
-import { deleteItem, setBasket } from "./basketSlice";
+import { deleteBasketItemAsync, setBasket } from "./basketSlice";
+import { LoadingButton } from "@mui/lab";
 
 const BasketPage = () => {
   const dispatch = useAppDispatch();
-  const { basket } = useAppSelector((state) => state.basket);
+  const { basket, status } = useAppSelector((state) => state.basket);
+  
 
   function handleQuantityChange(e: SelectChangeEvent<any>, id: number) {
     const newQuantity = e.target.value;
@@ -34,11 +35,7 @@ const BasketPage = () => {
       .catch(() => {});
   }
 
-  function handleItemDelete(id: number) {
-    agent.Basket.removeItem(id)
-      .then(() => dispatch(deleteItem(id)))
-      .catch(() => {});
-  }
+  
 
   if (!basket)
     return <Typography variant="h3">Your basket is empty</Typography>;
@@ -106,13 +103,14 @@ const BasketPage = () => {
       renderCell: (params) => (
         <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
           <FormControl>
-            <IconButton
+            <LoadingButton
+            loading = {status==="pendingBasketRemoval" + (params.id as number)}
               aria-label="delete"
               color="error"
-              onClick={() => handleItemDelete(params.id as number)}
+              onClick={() => dispatch(deleteBasketItemAsync({productId: (params.id as number)}))}
             >
               <DeleteIcon />
-            </IconButton>
+            </LoadingButton>
           </FormControl>
         </Container>
       ),
