@@ -8,29 +8,18 @@ import {
   Avatar,
   Button,
 } from "@mui/material";
-import React, { useState } from "react";
 import { Product } from "../../App/Models/Product";
 import { Link } from "react-router-dom";
-import agent from "../../App/api/agent";
 import { LoadingButton } from "@mui/lab";
 
 import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
-import { addBasketItemAsync, setBasket } from "../Basket/basketSlice";
+import { addBasketItemAsync } from "../Basket/basketSlice";
 interface Props {
   product: Product;
 }
-const ProductCard = ({ product }: Props) => {
-  const [loading, setLoading] = useState(false);
+const ProductCard = ({ product }: Props) => {  
   const { status } = useAppSelector((state) => state.basket);
-  const dispatch = useAppDispatch();
-
-  function addItem(productId: number) {
-    setLoading(true);
-    agent.Basket.addItem(productId)
-      .then((basket) => dispatch(setBasket(basket)))
-      .catch((error) => {})
-      .finally(() => setLoading(false));
-  }
+  const dispatch = useAppDispatch(); 
 
   return (
     <>
@@ -40,7 +29,6 @@ const ProductCard = ({ product }: Props) => {
           title={product.name}
           titleTypographyProps={{ sx: { fontWeight: "bold" } }}
         />
-
         <CardMedia
           component="img"
           sx={{ height: "90%", backgroundSize: "contain" }}
