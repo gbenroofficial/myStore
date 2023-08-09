@@ -20,20 +20,23 @@ import LoadingBox from "../../App/Layouts/LoadingBox";
 
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
-import { setBasket } from "../Basket/basketSlice";
+import {
+  deleteBasketItemAsync,
+  updateBasketItemAsync,
+} from "../Basket/basketSlice";
 
 const ProductInfo = () => {
   const dispatch = useAppDispatch();
-  const { basket } = useAppSelector((state) => state.basket);
+  const { basket, status } = useAppSelector((state) => state.basket);
   const [product, setProduct] = useState<Product | null>();
   const [loading, setLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
-  const [cartCount, setCartCount] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
+  const [cartCount, setItemCount] = useState(0);
+
   const item = basket?.items.find((itm) => itm.productId === product?.id);
 
   useEffect(() => {
-    if (item) setCartCount(item.quantity);
+    if (item) setItemCount(item.quantity);
     id &&
       agent.Catalogue.productInfo(parseInt(id))
         .then((product) => setProduct(product))
@@ -43,30 +46,18 @@ const ProductInfo = () => {
 
   function handleQuantityChange(e: any) {
     if (e.target.value >= 0) {
-      setCartCount(e.target.value);
+      setItemCount(e.target.value);
     }
   }
 
   function handleCartUpdate() {
-    if (cartCount >= 0 && product) {
-      console.log(cartCount);
-      setSubmitting(true);
+    if (cartCount >= 0 && product) { 
       if (cartCount === 0 && item) {
-        agent.Basket.removeItem(item.productId)
-          .then(() => {
-            dispatch(setBasket(basket));
-          })
-          .catch(() => {})
-          .finally(() => {
-            setSubmitting(false);
-          });
+        dispatch(deleteBasketItemAsync({ productId: product.id }));
       } else {
-        agent.Basket.updateItem(product.id, cartCount)
-          .then((basket) => dispatch(setBasket(basket)))
-          .catch(() => {})
-          .finally(() => {
-            setSubmitting(false);
-          });
+        dispatch(
+          updateBasketItemAsync({ productId: product.id, quantity: cartCount })
+        );
       }
     }
   }
@@ -133,7 +124,7 @@ const ProductInfo = () => {
                 variant="contained"
                 fullWidth
                 onClick={handleCartUpdate}
-                loading={submitting}
+                loading={status.includes("pending")}
                 disabled={
                   item?.quantity === cartCount || (!item && cartCount === 0)
                 }
