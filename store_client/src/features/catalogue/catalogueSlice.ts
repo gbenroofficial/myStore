@@ -10,7 +10,7 @@ import { RootState } from "../../App/store/configureStore";
 const productAdapter = createEntityAdapter<Product>();
 
 export const getProductsAsync = createAsyncThunk<Product[]>(
-  "catalogue/getProductAsync",
+  "catalogue/getProductsAsync",
   async () => {
     try {
       return await agent.Catalogue.productList();
