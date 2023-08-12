@@ -6,18 +6,19 @@ import { getProductsAsync, productSelectors } from "./catalogueSlice";
 
 const Catalogue = () => {
   const products = useAppSelector(productSelectors.selectAll);
-  const {isProductsLoaded, status} = useAppSelector(state => state.catalogue)
+  const { isProductsLoaded, status } = useAppSelector(
+    (state) => state.catalogue
+  );
   const dispatch = useAppDispatch();
- 
 
   useEffect(() => {
-    if(!isProductsLoaded){
-      dispatch(getProductsAsync())
+    if (!isProductsLoaded) {
+      dispatch(getProductsAsync());
     }
-    
   }, [dispatch, isProductsLoaded]);
 
-  if (status.includes("pending")) return <LoadingBox message="Loading Products..." />;
+  if (status.includes("pending"))
+    return <LoadingBox message="Loading Products..." />;
   return (
     <>
       <ProductList products={products} />
