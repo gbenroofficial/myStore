@@ -13,8 +13,6 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Product } from "../../App/Models/Product";
-import agent from "../../App/api/agent";
 import NotFound from "../../App/errors/NotFound";
 import LoadingBox from "../../App/Layouts/LoadingBox";
 
@@ -24,25 +22,24 @@ import {
   deleteBasketItemAsync,
   updateBasketItemAsync,
 } from "../Basket/basketSlice";
+import { getProductAsync, productSelectors } from "./catalogueSlice";
 
 const ProductInfo = () => {
   const dispatch = useAppDispatch();
   const { basket, status } = useAppSelector((state) => state.basket);
-  const [product, setProduct] = useState<Product | null>();
-  const [loading, setLoading] = useState(true);
+  const {status: productStatus} = useAppSelector((state) => state.catalogue);
   const { id } = useParams<{ id: string }>();
+  const product = useAppSelector((state) =>
+    id ? productSelectors.selectById(state, id) : null
+  );
   const [cartCount, setItemCount] = useState(0);
 
   const item = basket?.items.find((itm) => itm.productId === product?.id);
 
   useEffect(() => {
     if (item) setItemCount(item.quantity);
-    id &&
-      agent.Catalogue.productInfo(parseInt(id))
-        .then((product) => setProduct(product))
-        .catch((error) => console.log(error))
-        .finally(() => setLoading(false));
-  }, [id, item]);
+    if (!product && id) dispatch(getProductAsync(parseInt(id)));
+  }, [dispatch, id, item, product]);
 
   function handleQuantityChange(e: any) {
     if (e.target.value >= 0) {
@@ -51,7 +48,7 @@ const ProductInfo = () => {
   }
 
   function handleCartUpdate() {
-    if (cartCount >= 0 && product) { 
+    if (cartCount >= 0 && product) {
       if (cartCount === 0 && item) {
         dispatch(deleteBasketItemAsync({ productId: product.id }));
       } else {
@@ -62,7 +59,8 @@ const ProductInfo = () => {
     }
   }
 
-  if (loading) return <LoadingBox message="Loading Product..." />;
+  if (productStatus.includes("pending"))
+    return <LoadingBox message="Loading Product..." />;
   if (!product) return <NotFound />;
   return (
     <>
