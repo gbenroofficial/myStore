@@ -18,5 +18,28 @@ namespace API.Extensions
             };
             return query;
         }
+
+        public static IQueryable<Product> Search(this IQueryable<Product> query, string name){
+            if(string.IsNullOrEmpty(name)) return query;
+            var nameLower = name.Trim().ToLower();
+            return query.Where(product => product.Name.ToLower().Contains(nameLower));
+        }
+
+        public static IQueryable<Product> FilterBy(this IQueryable<Product> query, string brands, string types){
+            var brandList = new List<string>();
+            var typeList = new List<string>();
+
+            if(!string.IsNullOrEmpty(brands)){
+                brandList.AddRange(brands.ToLower().Split(",").ToList());
+            }
+
+            if(!string.IsNullOrEmpty(types)){
+                typeList.AddRange(types.ToLower().Split(",").ToList());
+            }
+            if(brandList.Count != 0) query = query.Where(product => brandList.Contains(product.Brand.ToLower()));
+            if(typeList.Count != 0) query = query.Where(product => typeList.Contains(product.Type.ToLower()));
+
+            return query;
+        }
     }
 }
