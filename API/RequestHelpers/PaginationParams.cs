@@ -13,7 +13,11 @@ namespace API.RequestHelpers
 
         private int _pageSize = 6;
 
-        public int MyProperty { get => _pageSize; set => _pageSize = value < MaxPageSize? value: MaxPageSize; }
+        public int PageSize 
+        { 
+            get => _pageSize; 
+            set => _pageSize = value < MaxPageSize? value: MaxPageSize; 
+        }
         
     }
 }
