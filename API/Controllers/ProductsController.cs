@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,12 @@ namespace API.Controllers
 
         }
         [HttpGet]
-        public async Task<List<Product>> getAllProducts (){
-            return await _context.Products.ToListAsync();
+        public async Task<List<Product>> getProducts (string feature){
+            var query = _context.Products.AsQueryable().SortBy(feature);           
+                  
+            return await query.ToListAsync();
         }
+
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<Product>> getProduct(int id){
