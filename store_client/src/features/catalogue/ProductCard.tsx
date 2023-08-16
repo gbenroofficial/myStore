@@ -23,7 +23,7 @@ const ProductCard = ({ product }: Props) => {
 
   return (
     <>
-      <Card key={product.id} sx={{ maxWidth: 345 }}>
+      <Card key={product.id} sx={{ maxWidth: 320, maxHeight: 530 }}>
         <CardHeader
           avatar={<Avatar>{product.name.charAt(0)}</Avatar>}
           title={product.name}
@@ -31,7 +31,8 @@ const ProductCard = ({ product }: Props) => {
         />
         <CardMedia
           component="img"
-          sx={{ height: "90%", backgroundSize: "contain" }}
+          height = "30%"
+          sx={{ backgroundSize: "contain", width: "70%" }}
           image={product.pictureUrl}
           alt={product.name}
         />
