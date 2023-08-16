@@ -35,7 +35,6 @@ export const getFiltersAsync = createAsyncThunk(
   "catalogue/getFiltersAsync",
   async (_, ThunkApi) => {
     try {
-      console.log("get Filters")
       return await agent.Catalogue.filters();
     } catch (error: any) {
       return ThunkApi.rejectWithValue({ error: error.data });
@@ -46,7 +45,7 @@ export const catalogueSlice = createSlice({
   name: "catalogue",
   initialState: productAdapter.getInitialState({
     isProductsLoaded: false,
-    isFiltersLoaded:false,
+    isFiltersLoaded: false,
     status: "idle",
     brands: [],
     types: [],
@@ -77,20 +76,20 @@ export const catalogueSlice = createSlice({
       state.status = "idle";
     });
 
-    builder.addCase(getFiltersAsync.pending, (state)=>{
-      state.status = "pendingGetFilters"
-    })
+    builder.addCase(getFiltersAsync.pending, (state) => {
+      state.status = "pendingGetFilters";
+    });
 
-    builder.addCase(getFiltersAsync.fulfilled, (state, action)=>{
+    builder.addCase(getFiltersAsync.fulfilled, (state, action) => {
       state.status = "idle";
       state.types = action.payload.types;
       state.brands = action.payload.brands;
       state.isFiltersLoaded = true;
-    })
-    builder.addCase(getFiltersAsync.rejected, (state)=>{
+    });
+    builder.addCase(getFiltersAsync.rejected, (state) => {
       state.status = "idle";
       state.isFiltersLoaded = false;
-    })
+    });
   },
 });
 
