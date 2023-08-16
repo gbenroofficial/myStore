@@ -46,14 +46,14 @@ axios.interceptors.response.use(
   }
 );
 const requests = {
-  get: (url: string) => axios.get(url).then(responseBody),
+  get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responseBody),
   post: (url: string, body: {}) => axios.post(url).then(responseBody),
   put: (url: string, body: {}) => axios.put(url).then(responseBody),
   delete: (url: string) => axios.delete(url).then(responseBody),
 };
 
 const Catalogue = {
-  productList: () => requests.get("products"),
+  productList: (params: URLSearchParams) => requests.get("products", params),
   productInfo: (id: number) => requests.get(`products/${id}`),
   filters: () => requests.get("products/filters"),
 };
