@@ -14,24 +14,42 @@ export const getProductsAsync = createAsyncThunk<Product[]>(
   async (_, ThunkApi) => {
     try {
       return await agent.Catalogue.productList();
-    } catch (error: any) {return ThunkApi.rejectWithValue({error: error.data})}
+    } catch (error: any) {
+      return ThunkApi.rejectWithValue({ error: error.data });
+    }
   }
 );
 
 export const getProductAsync = createAsyncThunk<Product, number>(
-    "catalogue/getProductAsync",
-    async (productId, ThunkApi) => {
-      try {
-        return await agent.Catalogue.productInfo(productId);
-      } catch (error:any) {return ThunkApi.rejectWithValue({error: error.data})}
+  "catalogue/getProductAsync",
+  async (productId, ThunkApi) => {
+    try {
+      return await agent.Catalogue.productInfo(productId);
+    } catch (error: any) {
+      return ThunkApi.rejectWithValue({ error: error.data });
     }
-  );
+  }
+);
 
+export const getFiltersAsync = createAsyncThunk(
+  "catalogue/getFiltersAsync",
+  async (_, ThunkApi) => {
+    try {
+      console.log("get Filters")
+      return await agent.Catalogue.filters();
+    } catch (error: any) {
+      return ThunkApi.rejectWithValue({ error: error.data });
+    }
+  }
+);
 export const catalogueSlice = createSlice({
   name: "catalogue",
   initialState: productAdapter.getInitialState({
     isProductsLoaded: false,
+    isFiltersLoaded:false,
     status: "idle",
+    brands: [],
+    types: [],
   }),
   reducers: {},
   extraReducers: (builder) => {
@@ -49,14 +67,29 @@ export const catalogueSlice = createSlice({
     });
 
     builder.addCase(getProductAsync.pending, (state) => {
-        state.status = "pendingGetProduct";
-    } );
+      state.status = "pendingGetProduct";
+    });
     builder.addCase(getProductAsync.fulfilled, (state, action) => {
-        productAdapter.upsertOne(state, action.payload);
-        state.status = "idle";
+      productAdapter.upsertOne(state, action.payload);
+      state.status = "idle";
     });
     builder.addCase(getProductAsync.rejected, (state) => {
-        state.status = "idle";
+      state.status = "idle";
+    });
+
+    builder.addCase(getFiltersAsync.pending, (state)=>{
+      state.status = "pendingGetFilters"
+    })
+
+    builder.addCase(getFiltersAsync.fulfilled, (state, action)=>{
+      state.status = "idle";
+      state.types = action.payload.types;
+      state.brands = action.payload.brands;
+      state.isFiltersLoaded = true;
+    })
+    builder.addCase(getFiltersAsync.rejected, (state)=>{
+      state.status = "idle";
+      state.isFiltersLoaded = false;
     })
   },
 });
