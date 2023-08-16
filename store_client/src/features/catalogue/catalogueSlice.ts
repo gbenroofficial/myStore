@@ -7,6 +7,7 @@ import { Product, ProductParams } from "../../App/Models/Product";
 import agent from "../../App/api/agent";
 import { RootState } from "../../App/store/configureStore";
 
+
 interface CatalogueState{
   isProductsLoaded: boolean,
   isFiltersLoaded: boolean,
@@ -18,11 +19,25 @@ interface CatalogueState{
 
 const productAdapter = createEntityAdapter<Product>();
 
-export const getProductsAsync = createAsyncThunk<Product[]>(
+function getParams(productParams: ProductParams){
+  const params = new URLSearchParams();
+
+  params.append("pageNumber", productParams.pageNumber.toString());
+  params.append("pageSize", productParams.pageSize.toString());
+  params.append("orderBy", productParams.orderBy);
+  if(productParams.brands) params.append("brands", productParams.brands.toString());
+  if(productParams.types) params.append("types", productParams.types.toString());
+  if(productParams.searchTerm) params.append("searchTerm", productParams.searchTerm);
+
+  return params;
+}
+
+export const getProductsAsync = createAsyncThunk<Product[], void, {state: RootState}>(
   "catalogue/getProductsAsync",
   async (_, ThunkApi) => {
+    const params = getParams(ThunkApi.getState().catalogue.productParams)
     try {
-      return await agent.Catalogue.productList();
+      return await agent.Catalogue.productList(params);
     } catch (error: any) {
       return ThunkApi.rejectWithValue({ error: error.data });
     }
