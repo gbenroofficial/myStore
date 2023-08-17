@@ -58,11 +58,7 @@ const Catalogue = () => {
         <Paper sx={{ mb: 2, p: 2 }}>
           <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Sort</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue={sortOptions[0].value}
-              name="radio-buttons-group"
-            >
+            <RadioGroup >
               {sortOptions.map((option) => (
                 <FormControlLabel
                   value={option.value}
