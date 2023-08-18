@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import ProductSearch from "./ProductSearch";
 import RadioButtonGroup from "../components/RadioButtonGroup";
+import CheckBoxSet from "../components/CheckBoxSet";
 
 const sortOptions = [
   { value: "name", label: "Alphabetical" },
@@ -63,23 +64,29 @@ const Catalogue = () => {
           <RadioButtonGroup
             selectedValue={productParams.orderBy}
             options={sortOptions}
-            onChange={(e) => dispatch(setProductParams({orderBy: e.target.value}))}
+            onChange={(e) =>
+              dispatch(setProductParams({ orderBy: e.target.value }))
+            }
           />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-          {types.map((type) => (
-            <FormGroup key={type}>
-              <FormControlLabel control={<Checkbox />} label={type} />
-            </FormGroup>
-          ))}
+          <CheckBoxSet
+            items={types}
+            checked={productParams.types}
+            onChange={(elements: string[]) => {
+              dispatch(setProductParams({ types: elements }));
+            }}
+          />
         </Paper>
 
         <Paper sx={{ mb: 2, p: 2 }}>
-          {brands.map((brand) => (
-            <FormGroup key={brand}>
-              <FormControlLabel control={<Checkbox />} label={brand} />
-            </FormGroup>
-          ))}
+          <CheckBoxSet
+            items={brands}
+            checked={productParams.brands}
+            onChange={(elements: string[]) => {
+              dispatch(setProductParams({ brands: elements }));
+            }}
+          />
         </Paper>
       </Grid>
       <Grid item xs={8} sm={8} md={9} lg={8} xl={9}>
