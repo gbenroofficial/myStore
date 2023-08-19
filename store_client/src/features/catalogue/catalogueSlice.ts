@@ -89,9 +89,13 @@ export const catalogueSlice = createSlice({
   }),
   reducers: {
     setProductParams: (state, action) => {        
-        state.productParams = {...state.productParams, ...action.payload};
+        state.productParams = {...state.productParams, ...action.payload, pageNumber: 1};
         state.isProductsLoaded = false;
     },
+    setPageNumber: (state, action) => {        
+      state.productParams = {...state.productParams, ...action.payload};
+      state.isProductsLoaded = false;
+  },
     setMetaData: (state, action) => {
       state.metaData = action.payload;
     },
@@ -145,4 +149,4 @@ export const productSelectors = productAdapter.getSelectors(
   (state: RootState) => state.catalogue
 );
 
-export const {setProductParams, resetProductParams, setMetaData } = catalogueSlice.actions;
+export const {setProductParams, resetProductParams, setMetaData, setPageNumber } = catalogueSlice.actions;

@@ -6,6 +6,7 @@ import {
   getFiltersAsync,
   getProductsAsync,
   productSelectors,
+  setPageNumber,
   setProductParams,
 } from "./catalogueSlice";
 import { Grid, Paper } from "@mui/material";
@@ -47,8 +48,10 @@ const Catalogue = () => {
 
   if (status.includes("pending") || !metaData)
     return <LoadingBox message="Loading Products..." />;
+  
+
   return (
-    <Grid container spacing={4} >
+    <Grid container columnSpacing={4}  rowSpacing={1} pb={2}>
       <Grid item xs={4} sm={4} md={3} lg={4} xl={3}>
         <Paper sx={{ mb: 2 }}>
           <ProductSearch />
@@ -77,7 +80,7 @@ const Catalogue = () => {
             items={brands}
             checked={productParams.brands}
             onChange={(elements: string[]) => {
-              dispatch(setProductParams({ brands: elements }));
+              dispatch(setProductParams({ brands: elements}));
             }}
           />
         </Paper>
@@ -90,7 +93,7 @@ const Catalogue = () => {
         <PaginationBox
           metaData={metaData}
           onChange={(page: number) => {
-            dispatch(setProductParams({ pageNumber: page }));
+            dispatch(setPageNumber({ pageNumber: page }));
           }}
         />
       </Grid>
