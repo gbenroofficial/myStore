@@ -8,19 +8,11 @@ import {
   productSelectors,
   setProductParams,
 } from "./catalogueSlice";
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  Pagination,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import ProductSearch from "./ProductSearch";
 import RadioButtonGroup from "../components/RadioButtonGroup";
 import CheckBoxSet from "../components/CheckBoxSet";
+import PaginationBox from "../components/PaginationBox";
 
 const sortOptions = [
   { value: "name", label: "Alphabetical" },
@@ -37,6 +29,7 @@ const Catalogue = () => {
     brands,
     types,
     productParams,
+    metaData,
   } = useAppSelector((state) => state.catalogue);
   const dispatch = useAppDispatch();
 
@@ -52,10 +45,10 @@ const Catalogue = () => {
     }
   }, [dispatch, isFiltersLoaded]);
 
-  if (status.includes("pending"))
+  if (status.includes("pending") || !metaData)
     return <LoadingBox message="Loading Products..." />;
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={4} >
       <Grid item xs={4} sm={4} md={3} lg={4} xl={3}>
         <Paper sx={{ mb: 2 }}>
           <ProductSearch />
@@ -92,12 +85,14 @@ const Catalogue = () => {
       <Grid item xs={8} sm={8} md={9} lg={8} xl={9}>
         <ProductList products={products} />
       </Grid>
-      <Grid item xs={3}></Grid>
-      <Grid item xs={9}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Pagination color="primary" count={10} shape="rounded" />
-          <Typography> Showing 1-6 of 20</Typography>
-        </Box>
+      <Grid item xs={3} rowSpacing={0}></Grid>
+      <Grid item xs={9} sx={{pt:0}}>
+        <PaginationBox
+          metaData={metaData}
+          onChange={(page: number) => {
+            dispatch(setProductParams({ pageNumber: page }));
+          }}
+        />
       </Grid>
     </Grid>
   );
