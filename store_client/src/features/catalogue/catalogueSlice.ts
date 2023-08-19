@@ -27,8 +27,8 @@ function getParams(productParams: ProductParams){
   params.append("pageNumber", productParams.pageNumber.toString());
   params.append("pageSize", productParams.pageSize.toString());
   params.append("feature", productParams.orderBy);
-  if(productParams.brands) params.append("brands", productParams.brands.toString());
-  if(productParams.types) params.append("types", productParams.types.toString());
+  if(productParams.brands.length > 0) params.append("brands", productParams.brands.toString());
+  if(productParams.types.length > 0) params.append("types", productParams.types.toString());
   if(productParams.searchTerm) params.append("searchTerm", productParams.searchTerm);
 
   return params;
@@ -74,6 +74,8 @@ const initParams = () => {
     pageNumber: 1,
     orderBy: "name",
     pageSize: 6,
+    brands: [],
+    types: [],
   }
 }
 export const catalogueSlice = createSlice({
