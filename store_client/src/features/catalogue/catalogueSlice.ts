@@ -6,6 +6,7 @@ import {
 import { Product, ProductParams } from "../../App/Models/Product";
 import agent from "../../App/api/agent";
 import { RootState } from "../../App/store/configureStore";
+import { MetaData } from "../../App/Models/Pagination";
 
 
 interface CatalogueState{
@@ -14,7 +15,8 @@ interface CatalogueState{
   status: string,
   brands: string[],
   types: string[],
-  productParams: ProductParams
+  productParams: ProductParams,
+  metaData: MetaData | null,
 }
 
 const productAdapter = createEntityAdapter<Product>();
@@ -37,7 +39,9 @@ export const getProductsAsync = createAsyncThunk<Product[], void, {state: RootSt
   async (_, ThunkApi) => {
     const params = getParams(ThunkApi.getState().catalogue.productParams)
     try {
-      return await agent.Catalogue.productList(params);
+      const response = await agent.Catalogue.productList(params);
+      ThunkApi.dispatch(setMetaData(response.metaData));
+      return response.items;
     } catch (error: any) {
       return ThunkApi.rejectWithValue({ error: error.data });
     }
@@ -81,11 +85,15 @@ export const catalogueSlice = createSlice({
     brands: [],
     types: [],
     productParams: initParams(),
+    metaData: null,
   }),
   reducers: {
     setProductParams: (state, action) => {        
         state.productParams = {...state.productParams, ...action.payload};
         state.isProductsLoaded = false;
+    },
+    setMetaData: (state, action) => {
+      state.metaData = action.payload;
     },
     resetProductParams: (state) => {
       state.productParams = initParams();
@@ -137,4 +145,4 @@ export const productSelectors = productAdapter.getSelectors(
   (state: RootState) => state.catalogue
 );
 
-export const {setProductParams, resetProductParams } = catalogueSlice.actions;
+export const {setProductParams, resetProductParams, setMetaData } = catalogueSlice.actions;
