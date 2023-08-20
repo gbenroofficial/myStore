@@ -25,7 +25,7 @@ const Catalogue = () => {
   const products = useAppSelector(productSelectors.selectAll);
   const {
     isProductsLoaded,
-    status,
+
     isFiltersLoaded,
     brands,
     types,
@@ -46,12 +46,10 @@ const Catalogue = () => {
     }
   }, [dispatch, isFiltersLoaded]);
 
-  if (status.includes("pending") || !metaData)
-    return <LoadingBox message="Loading Products..." />;
-  
+  if (!isFiltersLoaded) return <LoadingBox message="Loading Products..." />;
 
   return (
-    <Grid container columnSpacing={4}  rowSpacing={1} pb={2}>
+    <Grid container columnSpacing={4} rowSpacing={1} pb={2}>
       <Grid item xs={4} sm={4} md={3} lg={4} xl={3}>
         <Paper sx={{ mb: 2 }}>
           <ProductSearch />
@@ -80,7 +78,7 @@ const Catalogue = () => {
             items={brands}
             checked={productParams.brands}
             onChange={(elements: string[]) => {
-              dispatch(setProductParams({ brands: elements}));
+              dispatch(setProductParams({ brands: elements }));
             }}
           />
         </Paper>
@@ -89,13 +87,15 @@ const Catalogue = () => {
         <ProductList products={products} />
       </Grid>
       <Grid item xs={3} rowSpacing={0}></Grid>
-      <Grid item xs={9} sx={{pt:0}}>
-        <PaginationBox
-          metaData={metaData}
-          onChange={(page: number) => {
-            dispatch(setPageNumber({ pageNumber: page }));
-          }}
-        />
+      <Grid item xs={9} sx={{ pt: 0 }}>
+        {metaData && (
+          <PaginationBox
+            metaData={metaData}
+            onChange={(page: number) => {
+              dispatch(setPageNumber({ pageNumber: page }));
+            }}
+          />
+        )}
       </Grid>
     </Grid>
   );

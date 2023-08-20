@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { router } from "../router/Router";
 import { PaginatedResponse } from "../Models/Pagination";
 
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 0));
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 1500));
 
 axios.defaults.baseURL = "http://localhost:5009/api/";
 axios.defaults.withCredentials = true;
