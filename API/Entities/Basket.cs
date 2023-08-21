@@ -10,7 +10,7 @@ namespace API.Entities
         public int Id { get; set; }
         public string OwnerId { get; set; }
 
-        //nav opt
+        //nav prop
         public List<BasketItem> Items { get; set; } = new ();  
         
         
