@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
-builder.Services.AddIdentityCore<User>()
+builder.Services.AddIdentityCore<User>(opt => {opt.User.RequireUniqueEmail = true;})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddAuthentication();
