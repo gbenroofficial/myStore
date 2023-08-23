@@ -15,7 +15,7 @@ namespace API.Entities
 
         
         
-        //Nav properties       
+        //Nav properties and foreign keys      
         [ForeignKey("Id")]
         public Product Product { get; set; } = null!;
 
