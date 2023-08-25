@@ -23,6 +23,7 @@ namespace API.Data
 
                 await userManager.CreateAsync(admin, "Password_005");
                 await userManager.AddToRoleAsync(admin, "Admin");
+                await userManager.AddToRoleAsync(admin, "Member");
             }
 
 
