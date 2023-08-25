@@ -24,7 +24,13 @@ namespace API.Data
                 await userManager.CreateAsync(admin, "Password_005");
                 await userManager.AddToRoleAsync(admin, "Admin");
                 await userManager.AddToRoleAsync(admin, "Member");
+                
             }
+           /*  var users = userManager.Users.ToList();
+
+            foreach(var user in users){
+                await userManager.DeleteAsync(user);
+            } */
 
 
 
