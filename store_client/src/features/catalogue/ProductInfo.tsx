@@ -61,7 +61,9 @@ const ProductInfo = () => {
 
   if (productStatus.includes("pending"))
     return <LoadingBox message="Loading Product..." />;
+
   if (!product) return <NotFound />;
+  
   return (
     <>
       <Grid container spacing={20}>
