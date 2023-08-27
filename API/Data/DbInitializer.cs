@@ -1,12 +1,15 @@
 
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
     public static class DbInitializer
     {
         public static async Task Initialize(StoreContext context, UserManager<User> userManager){
+
+            
             if(!userManager.Users.Any()){
                 var user = new User{
                     UserName = "Dan",
@@ -26,14 +29,12 @@ namespace API.Data
                 await userManager.AddToRoleAsync(admin, "Member");
                 
             }
-           /*  var users = userManager.Users.ToList();
+
+            /* var users = await userManager.Users.ToListAsync();
 
             foreach(var user in users){
                 await userManager.DeleteAsync(user);
             } */
-
-
-
 
 
             if (context.Products.Any()){

@@ -94,6 +94,7 @@ const agent = {
   Catalogue,
   TestErrors,
   Basket,
+  Account,
 };
 
 export default agent;
