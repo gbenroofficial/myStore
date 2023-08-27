@@ -6,6 +6,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   SelectChangeEvent,
   Typography,
@@ -121,16 +122,18 @@ const BasketPage = () => {
   return (
     <>
       <div style={{ height: 800, width: "100%" }}>
-        <DataGrid
-          rows={basket.items}
-          rowHeight={70}
-          autoHeight
-          columns={columns}
-          pageSizeOptions={[5, 10]}
-          checkboxSelection
-          getRowId={getRowId}
-          sx={{ bgcolor: "white" }}
-        />
+        <Paper>
+          <DataGrid
+            rows={basket.items}
+            rowHeight={70}
+            autoHeight
+            columns={columns}
+            pageSizeOptions={[5, 10]}
+            checkboxSelection
+            getRowId={getRowId}
+          />
+        </Paper>
+
         <Grid container sx={{ mt: 1 }}>
           <Grid item xs={6} />
           <Grid item xs={6}>
