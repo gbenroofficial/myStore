@@ -24,10 +24,9 @@ export default function Login() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log(values);
-
+    
     agent.Account.login(values)
-      .then((result) => console.log(result))
+      .then(() => {})
       .catch(() => {});
   };
 

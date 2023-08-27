@@ -14,10 +14,12 @@ axios.interceptors.response.use(
   async function (response) {
     await sleep();
     const pagination = response.headers["pagination"];
-    if(pagination) {response.data = new PaginatedResponse(
-      response.data,
-      JSON.parse(pagination)
-    );}
+    if (pagination) {
+      response.data = new PaginatedResponse(
+        response.data,
+        JSON.parse(pagination)
+      );
+    }
 
     return response;
   },
@@ -52,11 +54,22 @@ axios.interceptors.response.use(
     return Promise.reject(error.response);
   }
 );
+
+/* axios.interceptors.request.use(
+  async function (request) {
+    console.log(request);
+    return request;
+  },
+  function (error: AxiosError) {
+    console.log(error);
+  }
+); */
+
 const requests = {
   get: (url: string, params?: URLSearchParams) =>
     axios.get(url, { params }).then(responseBody),
-  post: (url: string, body: {}) => axios.post(url).then(responseBody),
-  put: (url: string, body: {}) => axios.put(url).then(responseBody),
+  post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+  put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
   delete: (url: string) => axios.delete(url).then(responseBody),
 };
 
@@ -85,10 +98,10 @@ const Basket = {
 };
 
 const Account = {
-    login: (values: any) => requests.post("account/login", values),
-    register: (values: any) => requests.post("account/register", values),
-    currentUser: () => requests.get("account/currentUser"),
-}
+  login: (values: {}) => requests.post("account/login", values),
+  register: (values: any) => requests.post("account/register", values),
+  currentUser: () => requests.get("account/currentUser"),
+};
 
 const agent = {
   Catalogue,
