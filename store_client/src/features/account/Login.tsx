@@ -6,12 +6,16 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Paper } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import agent from "../../App/api/agent";
 import { FieldValues, useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
+import { useAppDispatch } from "../../App/store/configureStore";
+import { signInUser } from "./accountSlice";
 
 export default function Login() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -22,7 +26,8 @@ export default function Login() {
 
   async function submitForm(data: FieldValues) {
     try {
-      await agent.Account.login(data);
+      await dispatch(signInUser({data}));
+      navigate("/catalogue");
     } catch (error) {
       console.log(error);
     }
