@@ -4,6 +4,7 @@ using API.Entities;
 using API.Middleware;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -62,7 +63,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     }
                 );
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+    {
+        options.DefaultPolicy = new AuthorizationPolicyBuilder("Bearer")
+            .RequireAuthenticatedUser()
+            .Build();
+    });
 builder.Services.AddScoped<TokenService>();
 
 

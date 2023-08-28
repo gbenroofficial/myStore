@@ -51,7 +51,7 @@ const NavBar = ({ setDarkMode }: Props) => {
   return (
     <AppBar position="sticky" sx={{ mb: 4 }}>
       <Toolbar sx={{ display: "flex" }}>
-        <Typography variant="h6">Soso Store</Typography>
+        <Typography variant="h6">Soso</Typography>
 
         <List sx={{ ml: 2, display: "flex" }}>
           {sectionsList.map(({ title, path }) => (
