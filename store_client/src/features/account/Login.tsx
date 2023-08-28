@@ -26,7 +26,7 @@ export default function Login() {
 
   async function submitForm(data: FieldValues) {
     try {
-      await dispatch(signInUser({data}));
+      await dispatch(signInUser(data));
       navigate("/catalogue");
     } catch (error) {
       console.log(error);
