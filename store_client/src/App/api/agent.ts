@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Router";
 import { PaginatedResponse } from "../Models/Pagination";
+import { store } from "../store/configureStore";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -9,6 +10,12 @@ axios.defaults.baseURL = "http://localhost:5009/api/";
 axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
+
+axios.interceptors.request.use((request) => {
+  const token = store.getState().account.user?.token;
+  if (token) request.headers.Authorization = `Bearer ${token}`;
+  return request;
+});
 
 axios.interceptors.response.use(
   async function (response) {
@@ -38,7 +45,7 @@ axios.interceptors.response.use(
         toast.error(data.title);
         break;
       case 401:
-        toast.error(data.title);
+        toast.error(data.title || "Unauthorised");
         break;
       case 404:
         router.navigate("/not-found");
@@ -55,22 +62,27 @@ axios.interceptors.response.use(
   }
 );
 
-/* axios.interceptors.request.use(
-  async function (request) {
-    console.log(request);
-    return request;
-  },
-  function (error: AxiosError) {
-    console.log(error);
-  }
-); */
-
 const requests = {
   get: (url: string, params?: URLSearchParams) =>
-    axios.get(url, { params }).then(responseBody).catch(()=>{}),
-  post: (url: string, body: {}) => axios.post(url, body).then(responseBody).catch(()=>{}),
-  put: (url: string, body: {}) => axios.put(url, body).then(responseBody).catch(()=>{}),
-  delete: (url: string) => axios.delete(url).then(responseBody).catch(()=>{}),
+    axios
+      .get(url, { params })
+      .then(responseBody)
+      .catch(() => {}),
+  post: (url: string, body: {}) =>
+    axios
+      .post(url, body)
+      .then(responseBody)
+      .catch(() => {}),
+  put: (url: string, body: {}) =>
+    axios
+      .put(url, body)
+      .then(responseBody)
+      .catch(() => {}),
+  delete: (url: string) =>
+    axios
+      .delete(url)
+      .then(responseBody)
+      .catch(() => {}),
 };
 
 const Catalogue = {
