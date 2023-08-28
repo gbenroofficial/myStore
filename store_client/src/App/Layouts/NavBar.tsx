@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAppSelector } from "../store/configureStore";
+import LoggedInMenu from "./LoggedInMenu";
 interface Props {
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -39,7 +40,8 @@ const NavBar = ({ setDarkMode }: Props) => {
     { title: "register", path: "/register" },
   ];
 
-  const { basket } = useAppSelector((state)=> state.basket);
+  const { basket } = useAppSelector((state) => state.basket);
+  const { user } = useAppSelector((state) => state.account);
 
   const itemsCount = basket?.items?.reduce(
     (prevSum, item) => prevSum + item.quantity,
@@ -79,26 +81,6 @@ const NavBar = ({ setDarkMode }: Props) => {
           />
         </FormGroup>
         <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <List sx={{ ml: 2, display: "flex" }}>
-            {logList.map(({ title, path }) => (
-              <ListItem
-                component={NavLink}
-                to={path}
-                key={title}
-                sx={{
-                  color: "inherit",
-                  "&:hover": {
-                    color: "secondary.main",
-                  },
-                  "&:active": {
-                    color: "text.secondary",
-                  },
-                }}
-              >
-                {title.toUpperCase()}
-              </ListItem>
-            ))}
-          </List>
           <IconButton
             size="large"
             aria-label="show 17 new notifications"
@@ -110,6 +92,30 @@ const NavBar = ({ setDarkMode }: Props) => {
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
+          {user ? (
+            <LoggedInMenu />
+          ) : (
+            <List sx={{ ml: 2, display: "flex" }}>
+              {logList.map(({ title, path }) => (
+                <ListItem
+                  component={NavLink}
+                  to={path}
+                  key={title}
+                  sx={{
+                    color: "inherit",
+                    "&:hover": {
+                      color: "secondary.main",
+                    },
+                    "&:active": {
+                      color: "text.secondary",
+                    },
+                  }}
+                >
+                  {title.toUpperCase()}
+                </ListItem>
+              ))}
+            </List>
+          )}
         </Container>
       </Toolbar>
     </AppBar>
