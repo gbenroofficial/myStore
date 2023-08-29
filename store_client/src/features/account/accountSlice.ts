@@ -30,17 +30,8 @@ export const getCurrentUser = createAsyncThunk<User>(
     thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem("user")!)));
     try {
       const user = await agent.Account.currentUser();
-      if (user) {
-        localStorage.setItem("user", JSON.stringify(user));
-        return user;
-      }
-      else {        
-        toast.error("session has expired. Please log in again");
-        thunkAPI.dispatch(setUser(null))
-        localStorage.removeItem("user");
-        router.navigate("/login");
-        
-    }
+      localStorage.setItem("user", JSON.stringify(user));
+      return user;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
     }
