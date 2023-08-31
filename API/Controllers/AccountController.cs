@@ -45,7 +45,7 @@ namespace API.Controllers
             {
                 Email = user.Email,
                 Token = await _tokenService.GenerateToken(user),
-                Basket = anonBasket != null ? anonBasket.BasketToDto() : userBasket.BasketToDto()
+                Basket = anonBasket != null ? anonBasket?.BasketToDto() : userBasket?.BasketToDto()
             };
 
         }

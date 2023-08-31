@@ -10,6 +10,7 @@ namespace API.Extensions
     public static class BasketExtensions
     {
         public static BasketDto BasketToDto(this Basket basket){
+            
             return new BasketDto
             {
                 Id = basket.Id,

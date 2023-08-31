@@ -25,7 +25,9 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
       }
       localStorage.setItem("user", JSON.stringify(user));
       return user;
-    } catch (error) {}
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
   }
 );
 
@@ -79,7 +81,7 @@ export const accountSlice = createSlice({
       }
     );
     builder.addMatcher(isAnyOf(signInUser.rejected), (state, action) => {
-      console.log(action.payload);
+      throw action.payload;
     });
   },
 });
