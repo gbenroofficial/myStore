@@ -11,6 +11,7 @@ import React from "react";
 import { useAppDispatch } from "../store/configureStore";
 import { logOut } from "../../features/account/accountSlice";
 import { Logout } from "@mui/icons-material";
+import { clearBasket } from "../../features/Basket/basketSlice";
 
 const LoggedInMenu = () => {
   const dispatch = useAppDispatch();
@@ -75,7 +76,12 @@ const LoggedInMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => dispatch(logOut())}>
+        <MenuItem
+          onClick={() => {
+            dispatch(logOut());
+            dispatch(clearBasket())
+          }}
+        >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
