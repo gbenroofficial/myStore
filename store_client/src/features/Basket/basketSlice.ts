@@ -63,6 +63,10 @@ export const basketSlice = createSlice({
     setBasket: (state, action) => {
       state.basket = action.payload;
     },
+
+    clearBasket: (state) => {
+      state.basket = null;
+    },
   },
 
   extraReducers: (builder) => {
@@ -103,7 +107,7 @@ export const basketSlice = createSlice({
       state.status = "pendingBasketAddition";
     });
 
-   /*  builder.addCase(getBasketAsync.fulfilled, (state, action) => {
+    /*  builder.addCase(getBasketAsync.fulfilled, (state, action) => {
       state.basket = action.payload;
       state.status = "idle";
     });
@@ -112,14 +116,20 @@ export const basketSlice = createSlice({
       state.status = "idle";
     }); */
 
-    builder.addMatcher(isAnyOf(addBasketItemAsync.fulfilled, getBasketAsync.fulfilled), (state, action) => {
-      state.basket = action.payload;
-      state.status = "idle";
-    });
-    builder.addMatcher(isAnyOf(addBasketItemAsync.rejected, getBasketAsync.rejected), (state) => {
-      state.status = "idle";
-    });
+    builder.addMatcher(
+      isAnyOf(addBasketItemAsync.fulfilled, getBasketAsync.fulfilled),
+      (state, action) => {
+        state.basket = action.payload;
+        state.status = "idle";
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(addBasketItemAsync.rejected, getBasketAsync.rejected),
+      (state) => {
+        state.status = "idle";
+      }
+    );
   },
 });
 
-export const { setBasket } = basketSlice.actions;
+export const { setBasket, clearBasket } = basketSlice.actions;
