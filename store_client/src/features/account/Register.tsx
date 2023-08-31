@@ -6,12 +6,14 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Paper } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import agent from "../../App/api/agent";
+import { toast } from "react-toastify";
 
 export default function Register() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -55,9 +57,14 @@ export default function Register() {
       <Box
         component="form"
         onSubmit={handleSubmit((data) =>
-          agent.Account.register(data).catch((error) => {
-            handleValidationErrors(error);
-          })
+          agent.Account.register(data)
+            .then(() => {
+              toast.success("Registration successful. You can now log in");
+              navigate("/login");
+            })
+            .catch((error) => {
+              handleValidationErrors(error);
+            })
         )}
         noValidate
         sx={{ mt: 1 }}
@@ -75,7 +82,13 @@ export default function Register() {
           margin="normal"
           fullWidth
           label="Email"
-          {...register("email", { required: "email is required" })}
+          {...register("email", {
+            required: "email is required",
+            pattern: {
+              value: /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,5}$/,
+              message: "Not a valid email",
+            },
+          })}
           error={!!errors.email}
           helperText={errors?.email?.message as string}
         />
@@ -84,7 +97,14 @@ export default function Register() {
           fullWidth
           label="Password"
           type="password"
-          {...register("password", { required: "password is required" })}
+          {...register("password", {
+            required: "password is required",
+            pattern: {
+              value:
+                /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/,
+              message: "password does not meet requirements",
+            },
+          })}
           error={!!errors.password}
           helperText={errors?.password?.message as string}
         />
