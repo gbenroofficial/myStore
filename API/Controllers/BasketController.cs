@@ -43,9 +43,18 @@ namespace API.Controllers
 
             basket.AddItem(product);
 
-            var result = await _context.SaveChangesAsync() > 0;
+            try
+            {
+                var result = await _context.SaveChangesAsync() > 0;
+                if(result) return CreatedAtRoute("GetBasket", basket.BasketToDto());
+            }
+            catch (Exception error)
+            {
+                
+                throw error;
+            }            
 
-            if(result) return CreatedAtRoute("GetBasket", basket.BasketToDto());
+            
             return BadRequest(new ProblemDetails{Title = "Could not save item to basket"});     
         }
 
@@ -95,11 +104,11 @@ namespace API.Controllers
         }
 
         private string GetBuyerId()
-        {
-            return User.Identity?.Name ?? Request.Cookies["buyerId"];
+        {           
+            return User?.Identity?.Name ?? Request.Cookies["buyerId"];
         }
         private Basket CreateBasket(){
-            var buyerId = User.Identity?.Name;
+            var buyerId = User?.Identity?.Name;
             if (string.IsNullOrEmpty(buyerId)){
                 buyerId = Guid.NewGuid().ToString();
                 var cookieOptions = new CookieOptions{IsEssential=true, Expires = DateTime.Now.AddDays(30)};

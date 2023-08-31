@@ -6,13 +6,14 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Paper } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch } from "../../App/store/configureStore";
 import { signInUser } from "./accountSlice";
 
 export default function Login() {
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
@@ -26,7 +27,7 @@ export default function Login() {
   async function submitForm(data: FieldValues) {
     try {
       await dispatch(signInUser(data));
-      navigate("/catalogue");
+      navigate(location.state?.from || "/catalogue");
     } catch (error) {
       console.log(error);
     }

@@ -63,12 +63,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     }
                 );
 
-builder.Services.AddAuthorization(options =>
-    {
-        options.DefaultPolicy = new AuthorizationPolicyBuilder("Bearer")
-            .RequireAuthenticatedUser()
-            .Build();
-    });
+builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 
 
