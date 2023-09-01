@@ -20,7 +20,7 @@ namespace API.Entities
             if(item != null){
                 item.Quantity+=1;
             }
-            else{Items.Add(new BasketItem {Id = product.Id, Quantity = 1});}
+            else{Items.Add(new BasketItem {Quantity = 1, ProductId = product.Id, BasketId = Id});}
         }
         
         public void RemoveItem(Product product){
@@ -36,7 +36,7 @@ namespace API.Entities
             if(item != null){
                 item.Quantity = quantity;
             }
-            else{Items.Add(new BasketItem {Id = product.Id, Quantity = quantity});}
+            else{Items.Add(new BasketItem { Quantity = quantity, ProductId = product.Id, BasketId = Id});}
 
         }
     }
