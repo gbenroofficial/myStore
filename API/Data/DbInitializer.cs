@@ -30,13 +30,7 @@ namespace API.Data
                 
             }
 
-            /* var users = await userManager.Users.ToListAsync();
-
-            foreach(var user in users){
-                await userManager.DeleteAsync(user);
-            } */
-
-
+    
             if (context.Products.Any()){
                 return;
             }

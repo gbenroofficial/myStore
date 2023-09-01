@@ -34,9 +34,13 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.BasketItem", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("BasketId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -45,6 +49,8 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BasketId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("BasketItems");
                 });
@@ -173,13 +179,13 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3f8d24b5-48ba-40fa-8f3a-d2a94e3ec6d6",
+                            Id = "c16e75f5-2bb8-4c77-a247-84523d61a60a",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "bac9a785-57fd-44da-a1d6-4f0d472d7a4a",
+                            Id = "0d483977-2126-4f53-b71c-c5f1afd72086",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -296,8 +302,8 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("API.Entities.Product", "Product")
-                        .WithOne("BasketItem")
-                        .HasForeignKey("API.Entities.BasketItem", "Id")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -360,11 +366,6 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.Basket", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("API.Entities.Product", b =>
-                {
-                    b.Navigation("BasketItem");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,12 +16,12 @@ namespace API.Entities
         
         
         //Nav properties and foreign keys      
-        [ForeignKey("Id")]
-        public Product Product { get; set; } = null!;
+        public int ProductId { get; set; } 
+        public Product Product { get; set; }
 
     
         public int BasketId { get; set; }        
-        public Basket Basket { get; set; } = null!;
+        public Basket Basket { get; set; }
         
     }
 }
