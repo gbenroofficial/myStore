@@ -16,7 +16,7 @@ namespace API.Entities
         
         
         public void AddItem(Product product){
-            var item = Items.Find(item => item.Id == product.Id);
+            var item = Items.Find(item => item.ProductId == product.Id);
             if(item != null){
                 item.Quantity+=1;
             }
@@ -24,7 +24,7 @@ namespace API.Entities
         }
         
         public void RemoveItem(Product product){
-            var itemIndex = Items.FindIndex(item => item.Id == product.Id);
+            var itemIndex = Items.FindIndex(item => item.ProductId == product.Id);
             if(itemIndex != -1){
                 Items.RemoveAt(itemIndex);
             }
@@ -32,7 +32,7 @@ namespace API.Entities
         }
 
         public void UpdateItemQuantity(Product product, int quantity){
-            var item = Items.Find(item => item.Id == product.Id);
+            var item = Items.Find(item => item.ProductId == product.Id);
             if(item != null){
                 item.Quantity = quantity;
             }
