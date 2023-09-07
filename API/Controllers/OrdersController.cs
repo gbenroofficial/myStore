@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
+using API.Entities;
 using API.Entities.OrderComponents;
 using API.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,7 +50,62 @@ namespace API.Controllers
 
             if (basket == null) return BadRequest(new ProblemDetails {Title = "Could not locate basket"});
 
-            var items = new List<OrderItem>();
+            var orderItems = new List<OrderItem>();
+
+            foreach(var item in basket.Items)
+            {
+                var product = await _context.Products.FindAsync(item.ProductId);
+                var productOrdered = new ProductOrdered
+                {
+                    ProductId = product.Id,
+                    Name = product.Name,
+                    PictureUrl = product.PictureUrl
+                };
+                var orderItem = new OrderItem
+                {
+                    ProductOrdered = productOrdered,
+                    Price = product.Price,
+                    Quantity = item.Quantity
+                };
+
+                orderItems.Add(orderItem);
+                product.StockQuantity -= item.Quantity;
+            }
+
+            var subTotal = orderItems.Sum(item => item.Quantity * item.Price);
+            var deliveryFee = subTotal > 10000 ? 0 : 500;
+
+            var order = new Order
+            {
+                OrderItems = orderItems,
+                BuyerId = User.Identity.Name,
+                ShippingAddress = orderDto.ShippingAddress,
+                SubTotal = subTotal,
+                DeliveryFee = deliveryFee
+    
+            
+            };
+
+            _context.Orders.Add(order);
+            _context.Baskets.Remove(basket);
+
+            if(orderDto.SaveAddress) 
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+                user.Address = new UserAddress
+                {
+                    FullName = orderDto.ShippingAddress.FullName,
+                    Address1 = orderDto.ShippingAddress.Address1,
+                    Address2 = orderDto.ShippingAddress.Address2,
+                    City = orderDto.ShippingAddress.City,
+                    Region = orderDto.ShippingAddress.Region,
+                    PostCode = orderDto.ShippingAddress.PostCode,
+                    Country = orderDto.ShippingAddress.Country
+                };
+
+            }
+
+
 
         }
     }

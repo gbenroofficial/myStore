@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Entities.OrderComponents
 {
     [Owned]
-    public class ItemOrdered
+    public class ProductOrdered
     {
         public int ProductId {get; set;}
         public string Name { get; set; }

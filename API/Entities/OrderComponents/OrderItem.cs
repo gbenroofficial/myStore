@@ -8,7 +8,7 @@ namespace API.Entities.OrderComponents
     public class OrderItem
     {
         public int Id {get; set;}
-        public ItemOrdered ItemOrdered { get; set; }
+        public ProductOrdered ProductOrdered { get; set; }
         public long Price { get; set; }
         public int Quantity { get; set; }
     }
