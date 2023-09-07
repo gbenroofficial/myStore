@@ -33,7 +33,7 @@ namespace API.Controllers
                         .ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetOrder")]
         public async Task<ActionResult<Order>>  GetOrder(int id)
         {
             return await _context.Orders
@@ -41,6 +41,7 @@ namespace API.Controllers
                         .Where(x => x.BuyerId == User.Identity.Name && x.Id == id)
                         .FirstOrDefaultAsync();
         }
+
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder(CreateOrderDto orderDto)
         {
@@ -103,7 +104,15 @@ namespace API.Controllers
                     Country = orderDto.ShippingAddress.Country
                 };
 
+                _context.Update(user);
+
             }
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result) return CreatedAtRoute("GetOrder", new {id = order.Id}, order.Id);
+
+            return BadRequest("Problem creating order");
 
 
 
