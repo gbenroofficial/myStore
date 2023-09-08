@@ -76,9 +76,11 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser(){
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if(user == null) return Unauthorized();
+            var basket = await FindBasket(user.UserName);
             return new UserDto{
                 Email = user.Email,
-                Token = await _tokenService.GenerateToken(user)
+                Token = await _tokenService.GenerateToken(user),
+                Basket = basket?.BasketToDto() 
             };
         }
 
