@@ -11,9 +11,9 @@ import {
 } from "./catalogueSlice";
 import { Grid, Paper } from "@mui/material";
 import ProductSearch from "./ProductSearch";
-import RadioButtonGroup from "../components/RadioButtonGroup";
-import CheckBoxSet from "../components/CheckBoxSet";
-import PaginationBox from "../components/PaginationBox";
+import RadioButtonGroup from "../../App/components/RadioButtonGroup";
+import CheckBoxSet from "../../App/components/CheckBoxSet";
+import PaginationBox from "../../App/components/PaginationBox";
 
 const sortOptions = [
   { value: "name", label: "Alphabetical" },
