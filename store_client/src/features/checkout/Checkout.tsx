@@ -31,11 +31,14 @@ function getStepContent(step: number) {
 }
 
 export default function Checkout() {
+  
+  const [activeStep, setActiveStep] = useState(0);
+
+  const currentSchema = validationSchema[activeStep];
   const methods = useForm({
     mode: "onTouched",
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(currentSchema),
   });
-  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
