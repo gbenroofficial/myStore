@@ -1,4 +1,5 @@
 import { Typography, Grid, TextField, FormControlLabel, Checkbox } from "@mui/material";
+import AppTextInput from "../../App/components/AppTextInput";
 
 export default function PaymentForm() {
   return (
@@ -8,18 +9,11 @@ export default function PaymentForm() {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <TextField
-            required
-            id="cardName"
-            label="Name on card"
-            fullWidth
-            autoComplete="cc-name"
-            variant="standard"
-          />
+          <AppTextInput label="Name on card" name="nameOnCard" />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
+            //required
             id="cardNumber"
             label="Card number"
             fullWidth
@@ -29,7 +23,7 @@ export default function PaymentForm() {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
+            //required
             id="expDate"
             label="Expiry date"
             fullWidth
@@ -39,7 +33,7 @@ export default function PaymentForm() {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
+            //required
             id="cvv"
             label="CVV"
             helperText="Last three digits on signature strip"
