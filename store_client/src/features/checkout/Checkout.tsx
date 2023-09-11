@@ -11,9 +11,13 @@ import { useState } from "react";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
-import { FormProvider, useForm } from "react-hook-form";
+import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { validationSchema } from "./checkOutValidation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import agent from "../../App/api/agent";
+import { useAppDispatch } from "../../App/store/configureStore";
+import { clearBasket } from "../Basket/basketSlice";
+import { LoadingButton } from "@mui/lab";
 
 const steps = ["Shipping address", "Review your order", "Payment details"];
 
@@ -31,8 +35,10 @@ function getStepContent(step: number) {
 }
 
 export default function Checkout() {
-  
+  const dispatch = useAppDispatch();
   const [activeStep, setActiveStep] = useState(0);
+  const [orderNumber, setOrderNumber] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const currentSchema = validationSchema[activeStep];
   const methods = useForm({
@@ -40,8 +46,26 @@ export default function Checkout() {
     resolver: yupResolver(currentSchema),
   });
 
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
+  const handleNext = async (data: FieldValues) => {
+    const { nameOnCard, saveAddress, ...shippingAddress } = data;
+    if (activeStep === steps.length - 1) {
+      setLoading(true);
+      try {
+        const orderNumber = await agent.Orders.create({
+          saveAddress,
+          shippingAddress,
+        });
+        setOrderNumber(orderNumber);
+        setActiveStep(activeStep + 1);
+        dispatch(clearBasket());
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    } else {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleBack = () => {
@@ -71,7 +95,7 @@ export default function Checkout() {
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #2001539. We have emailed your order
+                Your order number is #{orderNumber}. We have not emailed your order
                 confirmation, and will send you an update when your order has
                 shipped.
               </Typography>
@@ -85,14 +109,15 @@ export default function Checkout() {
                     Back
                   </Button>
                 )}
-                <Button
+                <LoadingButton
+                  loading={loading}
                   disabled={!methods.formState.isValid}
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
                 >
                   {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                </Button>
+                </LoadingButton>
               </Box>
             </form>
           )}
