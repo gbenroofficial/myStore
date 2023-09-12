@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import AppCheckBox from "../../App/components/AppCheckBox";
 
 export default function AddressForm() {
-  const { control } = useFormContext();
+  const { control, formState } = useFormContext();
   return (
     <>
       <Typography variant="h6" gutterBottom>
@@ -35,7 +35,7 @@ export default function AddressForm() {
           <AppTextInput control={control} name="country" label="Country" />
         </Grid>
         <Grid item xs={12}>
-          <AppCheckBox name="saveAddress" label="Save as default address" control={control}/>
+          <AppCheckBox name="saveAddress" label="Save as default address" control={control} disabled={!formState.isDirty}/>
         </Grid>
       </Grid>
     </>
