@@ -8,14 +8,16 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import React from "react";
-import { useAppDispatch } from "../store/configureStore";
+import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import { logOut } from "../../features/account/accountSlice";
 import { Logout } from "@mui/icons-material";
 import { clearBasket } from "../../features/Basket/basketSlice";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import { Link } from "react-router-dom";
 
 const LoggedInMenu = () => {
   const dispatch = useAppDispatch();
-  //const { user } = useAppSelector((state) => state.account);
+  const { user } = useAppSelector((state) => state.account);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -37,7 +39,7 @@ const LoggedInMenu = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user?.email.charAt(0)}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -79,13 +81,19 @@ const LoggedInMenu = () => {
         <MenuItem
           onClick={() => {
             dispatch(logOut());
-            dispatch(clearBasket())
+            dispatch(clearBasket());
           }}
         >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           Log Out
+        </MenuItem>
+        <MenuItem component={Link} to="/orders">
+          <ListItemIcon>
+            <ViewListIcon fontSize="small" />
+          </ListItemIcon>
+          Orders
         </MenuItem>
       </Menu>
     </>
