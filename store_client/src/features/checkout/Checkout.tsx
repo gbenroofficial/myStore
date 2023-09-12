@@ -7,7 +7,7 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
@@ -41,10 +41,23 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
 
   const currentSchema = validationSchema[activeStep];
+
   const methods = useForm({
     mode: "onTouched",
     resolver: yupResolver(currentSchema),
   });
+
+  useEffect(() => {
+    agent.Account.fetchAddress().then((response) => {
+      if (response) {
+        methods.reset({
+          ...methods.getValues(),
+          ...response,
+          saveAdress: false,
+        });
+      }
+    });
+  }, [methods]);
 
   const handleNext = async (data: FieldValues) => {
     const { nameOnCard, saveAddress, ...shippingAddress } = data;
@@ -59,8 +72,8 @@ export default function Checkout() {
         setActiveStep(activeStep + 1);
         dispatch(clearBasket());
         setLoading(false);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        console.log(error.data);
         setLoading(false);
       }
     } else {
@@ -95,9 +108,9 @@ export default function Checkout() {
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #{orderNumber}. We have not emailed your order
-                confirmation, and will send you an update when your order has
-                shipped.
+                Your order number is #{orderNumber}. We have not emailed your
+                order confirmation, and will not send you an update when your
+                order has shipped.
               </Typography>
             </>
           ) : (
@@ -113,7 +126,7 @@ export default function Checkout() {
                   loading={loading}
                   disabled={!methods.formState.isValid}
                   variant="contained"
-                  onClick={handleNext}
+                  type="submit"
                   sx={{ mt: 3, ml: 1 }}
                 >
                   {activeStep === steps.length - 1 ? "Place order" : "Next"}
