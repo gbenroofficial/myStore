@@ -14,12 +14,12 @@ const responseBody = (response: AxiosResponse) => response.data;
 axios.interceptors.request.use((request) => {
   const token = store.getState().account.user?.token;
   if (token) request.headers.Authorization = `Bearer ${token}`;
+
   return request;
 });
 
 axios.interceptors.response.use(
   async function (response) {
-    
     await sleep();
     const pagination = response.headers["pagination"];
     if (pagination) {
@@ -99,19 +99,20 @@ const Account = {
   login: (values: {}) => requests.post("account/login", values),
   register: (values: any) => requests.post("account/register", values),
   currentUser: () => requests.get("account/currentUser"),
+  fetchAddress: () => requests.get("account/savedAddress")
 };
 const Orders = {
   getAll: () => requests.get("orders"),
   getOne: (id: number) => requests.get(`orders/${id}`),
-  create: (values: any) => requests.post("orders", values)
-}
+  create: (values: any) => requests.post("orders", values),
+};
 
 const agent = {
   Catalogue,
   TestErrors,
   Basket,
   Account,
-  Orders
+  Orders,
 };
 
 export default agent;
