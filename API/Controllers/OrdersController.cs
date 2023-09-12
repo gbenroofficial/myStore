@@ -92,8 +92,11 @@ namespace API.Controllers
 
             if(orderDto.SaveAddress) 
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-                user.Address = new UserAddress
+                var user = await _context.Users
+                                    .Include(u => u.Address)
+                                    .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+
+                var address = new UserAddress
                 {
                     FullName = orderDto.ShippingAddress.FullName,
                     Address1 = orderDto.ShippingAddress.Address1,
@@ -103,8 +106,7 @@ namespace API.Controllers
                     PostCode = orderDto.ShippingAddress.PostCode,
                     Country = orderDto.ShippingAddress.Country
                 };
-
-                _context.Update(user);
+                user.Address = address;                
 
             }
 
