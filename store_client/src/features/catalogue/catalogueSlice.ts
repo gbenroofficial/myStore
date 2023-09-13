@@ -73,7 +73,7 @@ const initParams = () => {
   return {
     pageNumber: 1,
     orderBy: "name",
-    pageSize: 6,
+    pageSize: 8,
     brands: [],
     types: [],
   }
