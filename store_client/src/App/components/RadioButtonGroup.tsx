@@ -13,13 +13,13 @@ const RadioButtonGroup = ({options, onChange, selectedValue}: Props) => {
     <>
       <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Sort</FormLabel>
-            <RadioGroup  onChange={onChange} value={selectedValue}>
+            <RadioGroup  onChange={onChange} value={selectedValue} >
               {options.map(({value, label}) => (
                 <FormControlLabel
                   value={value}
                   control={<Radio />}
                   label={label}
-                  key={value}
+                  key={value}                  
                 />
               ))}
             </RadioGroup>
