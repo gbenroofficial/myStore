@@ -25,7 +25,6 @@ const Catalogue = () => {
   const products = useAppSelector(productSelectors.selectAll);
   const {
     isProductsLoaded,
-
     isFiltersLoaded,
     brands,
     types,
@@ -50,7 +49,7 @@ const Catalogue = () => {
 
   return (
     <Grid container columnSpacing={4} rowSpacing={1} pb={2}>
-      <Grid item xs={4} sm={4} md={3} lg={4} xl={3}>
+      <Grid item xs={5} sm={5} md={3} lg={3} xl={3}>
         <Paper sx={{ mb: 2 }}>
           <ProductSearch />
         </Paper>
@@ -83,7 +82,7 @@ const Catalogue = () => {
           />
         </Paper>
       </Grid>
-      <Grid item xs={8} sm={8} md={9} lg={8} xl={9}>
+      <Grid item xs={7} sm={7} md={9} lg={9} xl={9}>
         <ProductList products={products} />
       </Grid>
       <Grid item xs={3} rowSpacing={0}></Grid>

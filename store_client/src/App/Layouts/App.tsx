@@ -51,7 +51,7 @@ function App() {
         />
         <CssBaseline />
         <NavBar setDarkMode={setDarkMode} />
-        <Container>
+        <Container maxWidth="xl">
           <Outlet />
         </Container>
       </ThemeProvider>
