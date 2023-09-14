@@ -85,8 +85,8 @@ const Catalogue = () => {
       <Grid item xs={7} sm={7} md={9} lg={9} xl={9}>
         <ProductList products={products} />
       </Grid>
-      <Grid item xs={3} rowSpacing={0}></Grid>
-      <Grid item xs={9} sx={{ pt: 0 }}>
+      <Grid item xs={0} sm={0} md={3} lg={3} xl={3} rowSpacing={0}></Grid>
+      <Grid item xs={12} sm={12} md={9} lg={9} xl={9} sx={{ pt: 0 }}>
         {metaData && (
           <PaginationBox
             metaData={metaData}
