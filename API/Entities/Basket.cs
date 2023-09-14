@@ -10,8 +10,12 @@ namespace API.Entities
         public int Id { get; set; }
         public string OwnerId { get; set; }
 
+        public string PaymentIntentId { get; set; }
+
+        public string ClientSecret { get; set; }
+
         //nav prop
-             public List<BasketItem> Items { get; set; } = new ();
+        public List<BasketItem> Items { get; set; } = new ();
         
         
         
