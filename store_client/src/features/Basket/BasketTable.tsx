@@ -15,6 +15,7 @@ import { formatCurrency } from "../../App/util/util";
 import { deleteBasketItemAsync, updateBasketItemAsync } from "./basketSlice";
 import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect, useState } from "react";
 
 interface Props {
   isBasket?: boolean;
@@ -22,6 +23,24 @@ interface Props {
 }
 
 const BasketTable = ({ items, isBasket = true }: Props) => {
+  const [isWide, setIsWide] = useState(true);
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth > 768) {
+        setIsWide(true);
+      } else {
+        setIsWide(false);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.basket);
 
@@ -46,20 +65,20 @@ const BasketTable = ({ items, isBasket = true }: Props) => {
         />
       ),
     },
-    { field: "name", headerName: "Product", width: 300, hideable: false },
+    { field: "name", headerName: "Product", flex: 0.5, hideable: false },
     {
       field: "price",
       hideable: false,
       headerName: "Price",
       type: "number",
-      width: 90,
+      flex: 0.5,
       valueGetter: (params) => formatCurrency(params.value),
     },
     {
       field: "quantity",
       hideable: false,
       headerName: "Quantity",
-      width: 200,
+      flex: 0.8,
       renderCell: (params) => (
         <>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -87,16 +106,16 @@ const BasketTable = ({ items, isBasket = true }: Props) => {
       hideable: false,
       headerName: "Subtotal",
       type: "number",
-      width: 100,
+      flex: 0.5,
       valueGetter: (params) =>
         "\u00A3" + (params.row.price * params.row.quantity) / 100,
     },
 
     {
       field: "custom",
-      hideable: false,      
+      hideable: false,
       headerName: "",
-      width: 250,
+      flex: 0.5,
       renderCell: (params) => (
         <Container sx={{ display: "flex", justifyContent: "flex-end" }}>
           <FormControl>
@@ -130,9 +149,9 @@ const BasketTable = ({ items, isBasket = true }: Props) => {
           autoHeight
           columns={columns}
           pageSizeOptions={[5, 10]}
-          checkboxSelection = {isBasket}
+          checkboxSelection={isBasket && isWide}
           getRowId={getRowId}
-          columnVisibilityModel={{custom: isBasket, }}
+          columnVisibilityModel={{ custom: isBasket, price: isWide, pictureUrl: isWide }}
         />
       </Paper>
     </>
