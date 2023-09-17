@@ -8,7 +8,7 @@ import ProductInfo from "../../features/catalogue/ProductInfo";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import BasketPage from "../../features/Basket/BasketPage";
-import CheckOut from "../../features/checkout/Checkout";
+
 
 import Register from "../../features/account/Register";
 import Login from "../../features/account/Login";
