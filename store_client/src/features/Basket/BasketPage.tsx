@@ -1,25 +1,12 @@
-import {
-  Button,
-  Grid,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
-import { updateBasketItemAsync } from "./basketSlice";
+import { useAppSelector } from "../../App/store/configureStore";
+
 import BasketTable from "./BasketTable";
 
 const BasketPage = () => {
-  const dispatch = useAppDispatch();
-  const { basket, status } = useAppSelector((state) => state.basket);
-
-  function handleQuantityChange(e: SelectChangeEvent<any>, id: number) {
-    const newQuantity = e.target.value;
-    dispatch(
-      updateBasketItemAsync({ productId: id, quantity: parseInt(newQuantity) })
-    );
-  }
+  const { basket } = useAppSelector((state) => state.basket);
 
   if (!basket)
     return <Typography variant="h3">Your basket is empty</Typography>;

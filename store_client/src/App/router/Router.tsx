@@ -14,6 +14,7 @@ import Register from "../../features/account/Register";
 import Login from "../../features/account/Login";
 import RequireAuth from "./RequireAuth";
 import Orders from "../../features/orders/Orders";
+import StripeWrapper from "../../features/checkout/StripeWrapper";
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +24,7 @@ export const router = createBrowserRouter([
       {
         element: <RequireAuth />,
         children: [
-          { path: "checkout", element: <CheckOut /> },
+          { path: "checkout", element: <StripeWrapper /> },
           { path: "orders", element: <Orders /> },
         ],
       },
