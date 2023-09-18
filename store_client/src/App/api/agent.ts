@@ -107,12 +107,17 @@ const Orders = {
   create: (values: any) => requests.post("orders", values),
 };
 
+const Payments = {
+  createPI: () => requests.post("payments", {})
+}
+
 const agent = {
   Catalogue,
   TestErrors,
   Basket,
   Account,
   Orders,
+  Payments
 };
 
 export default agent;
