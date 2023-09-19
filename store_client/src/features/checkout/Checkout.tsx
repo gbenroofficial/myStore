@@ -15,33 +15,48 @@ import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { validationSchema } from "./checkOutValidation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import agent from "../../App/api/agent";
-import { useAppDispatch } from "../../App/store/configureStore";
+import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
 import { clearBasket } from "../Basket/basketSlice";
 import { LoadingButton } from "@mui/lab";
 import { StripeElementType } from "@stripe/stripe-js";
+import {
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 
 const steps = ["Shipping address", "Review your order", "Payment details"];
-
-
 
 export default function Checkout() {
   const dispatch = useAppDispatch();
   const [activeStep, setActiveStep] = useState(0);
   const [orderNumber, setOrderNumber] = useState(0);
   const [loading, setLoading] = useState(false);
-  
-  const [cardState, setCardstate] = useState<{elementError: {[key in StripeElementType]?: string}}>({elementError:{}})
-  const [cardComplete, setCardComplete] = useState<any>({cardNumber: false, cardExpiry: false, cardCvc: false});
-  
-  function onCardInputChange(event: any){
+
+  const [cardState, setCardstate] = useState<{
+    elementError: { [key in StripeElementType]?: string };
+  }>({ elementError: {} });
+  const [cardComplete, setCardComplete] = useState<any>({
+    cardNumber: false,
+    cardExpiry: false,
+    cardCvc: false,
+  });
+  const [paymentMessage, setPaymentMessage] = useState("");
+  const [didPaySucceed, setDidPaySucceed] = useState(false);
+  const { basket } = useAppSelector((state) => state.basket);
+
+  const stripe = useStripe();
+  const elements = useElements();
+
+  function onCardInputChange(event: any) {
     setCardstate({
       ...cardState,
       elementError: {
         ...cardState.elementError,
-        [event.elementType]: event.error?.message
-      }
-    })
-    setCardComplete({...cardComplete, [event.elementType]: event.complete});
+        [event.elementType]: event.error?.message,
+      },
+    });
+    setCardComplete({ ...cardComplete, [event.elementType]: event.complete });
   }
 
   function getStepContent(step: number) {
@@ -51,7 +66,12 @@ export default function Checkout() {
       case 1:
         return <Review />;
       case 2:
-        return <PaymentForm onCardInputChange={onCardInputChange} cardState={cardState} />;
+        return (
+          <PaymentForm
+            onCardInputChange={onCardInputChange}
+            cardState={cardState}
+          />
+        );
       default:
         throw new Error("Unknown step");
     }
@@ -76,23 +96,50 @@ export default function Checkout() {
     });
   }, [methods]);
 
-  const handleNext = async (data: FieldValues) => {
+  async function submitOrder(data: FieldValues) {
+    setLoading(true);
     const { nameOnCard, saveAddress, ...shippingAddress } = data;
-    if (activeStep === steps.length - 1) {
-      setLoading(true);
-      try {
+    if (!stripe || !elements) return;
+    try {
+      const cardElement = elements.getElement(CardNumberElement);
+      const paymentResult = await stripe.confirmCardPayment(
+        basket?.clientSecret!,
+        {
+          payment_method: {
+            card: cardElement!,
+            billing_details: {
+              name: nameOnCard,
+            },
+          },
+        }
+      );
+      console.log(paymentResult);
+      if (paymentResult.paymentIntent?.status === "succeeded") {
         const orderNumber = await agent.Orders.create({
           saveAddress,
           shippingAddress,
         });
         setOrderNumber(orderNumber);
+        setDidPaySucceed(true);
+        setPaymentMessage("Thank you. Your payment has been received");
         setActiveStep(activeStep + 1);
         dispatch(clearBasket());
         setLoading(false);
-      } catch (error: any) {
-        console.log(error.data);
+      } else {
+        setPaymentMessage(paymentResult.error?.message!);
+        setDidPaySucceed(false);
         setLoading(false);
+        setActiveStep(activeStep + 1);
       }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+
+  const handleNext = async (data: FieldValues) => {
+    if (activeStep === steps.length - 1) {
+      await submitOrder(data);
     } else {
       setActiveStep(activeStep + 1);
     }
@@ -101,11 +148,16 @@ export default function Checkout() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-  function handleDisabled(){
-    if(activeStep === steps.length - 1){
-      return !cardComplete.cardCvc || !cardComplete.cardExpiry || !cardComplete.cardNumber || !methods.formState.isValid;
+  function handleDisabled() {
+    if (activeStep === steps.length - 1) {
+      return (
+        !cardComplete.cardCvc ||
+        !cardComplete.cardExpiry ||
+        !cardComplete.cardNumber ||
+        !methods.formState.isValid
+      );
     } else {
-      return !methods.formState.isValid
+      return !methods.formState.isValid;
     }
   }
 
@@ -129,13 +181,19 @@ export default function Checkout() {
           {activeStep === steps.length ? (
             <>
               <Typography variant="h5" gutterBottom>
-                Thank you for your order.
+                {paymentMessage}
               </Typography>
-              <Typography variant="subtitle1">
-                Your order number is #{orderNumber}. We have not emailed your
-                order confirmation, and will not send you an update when your
-                order has shipped.
-              </Typography>
+              {didPaySucceed ? (
+                <Typography variant="subtitle1">
+                  Your order number is #{orderNumber}. We have not emailed your
+                  order confirmation, and will not send you an update when your
+                  order has shipped.
+                </Typography>
+              ) : (
+                <Button variant="contained" onClick={handleBack}>
+                  Go back
+                </Button>
+              )}
             </>
           ) : (
             <form onSubmit={methods.handleSubmit(handleNext)}>
