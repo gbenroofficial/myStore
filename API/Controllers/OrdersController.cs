@@ -62,6 +62,7 @@ namespace API.Controllers
                     Name = product.Name,
                     PictureUrl = product.PictureUrl
                 };
+                
                 var orderItem = new OrderItem
                 {
                     ProductOrdered = productOrdered,
