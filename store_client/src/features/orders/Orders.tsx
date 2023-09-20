@@ -1,11 +1,4 @@
-import {
-  FormControl,
-  Container,
-  Paper,
-  Box,
-  Typography,
-  Button,
-} from "@mui/material";
+import { FormControl, Container, Paper, Box, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import { useEffect, useState } from "react";
@@ -20,7 +13,6 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [orderNum, setOrderNum] = useState(0);
-  const [selectOrder, setSelectOrder] = useState<Order>();
 
   useEffect(() => {
     agent.Orders.getAll()
@@ -104,7 +96,7 @@ export default function Orders() {
           >
             <Typography sx={{ p: 2 }} gutterBottom variant="h4">
               Orders
-            </Typography>           
+            </Typography>
           </Box>
           <Paper>
             <DataGrid
