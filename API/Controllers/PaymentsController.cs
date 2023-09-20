@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
+using API.Entities.OrderComponents;
 using API.Extensions;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace API.Controllers
 {
@@ -17,8 +19,10 @@ namespace API.Controllers
     {
         private readonly PaymentService _paymentService;
         private readonly StoreContext _context;
-        public PaymentsController(PaymentService paymentService, StoreContext context)
+        private readonly IConfiguration _config;
+        public PaymentsController(PaymentService paymentService, StoreContext context, IConfiguration config)
         {
+            _config = config;
             _paymentService = paymentService;
             _context = context;
             
@@ -50,5 +54,26 @@ namespace API.Controllers
             return basket.BasketToDto();
 
         }
+
+        [HttpPost("webhook")]
+        public async Task<ActionResult> StripeWebHook()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _config["StripeSettings:WhSecret"]);
+
+            var charge = (Charge)stripeEvent.Data.Object;
+
+            var order = await _context.Orders.FirstOrDefaultAsync(x => x.PaymentIntentId == charge.PaymentIntentId);
+
+            if(charge.Status == "succeeded") order.OrderStatus = OrderStatus.PaymentReceived;
+
+            await _context.SaveChangesAsync();
+
+            return new EmptyResult();
+        }
     }
+
+    
+
 }
