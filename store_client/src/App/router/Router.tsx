@@ -9,7 +9,6 @@ import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import BasketPage from "../../features/Basket/BasketPage";
 
-
 import Register from "../../features/account/Register";
 import Login from "../../features/account/Login";
 import RequireAuth from "./RequireAuth";
@@ -28,7 +27,6 @@ export const router = createBrowserRouter([
           { path: "orders", element: <Orders /> },
         ],
       },
-      { path: "", element: <HomePage /> },
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
       { path: "catalogue", element: <Catalogue /> },

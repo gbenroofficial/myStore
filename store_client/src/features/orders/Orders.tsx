@@ -17,7 +17,7 @@ export default function Orders() {
   useEffect(() => {
     agent.Orders.getAll()
       .then((orders) => setOrders(orders))
-      .catch((error) => console.log(error))
+      .catch(() => {})
       .finally(() => {
         setLoading(false);
       });
