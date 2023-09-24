@@ -113,7 +113,7 @@ export default function Checkout() {
           },
         }
       );
-      console.log(paymentResult);
+      
       if (paymentResult.paymentIntent?.status === "succeeded") {
         const orderNumber = await agent.Orders.create({
           saveAddress,
@@ -131,8 +131,7 @@ export default function Checkout() {
         setLoading(false);
         setActiveStep(activeStep + 1);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error) {      
       setLoading(false);
     }
   }

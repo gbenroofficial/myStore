@@ -5,15 +5,11 @@ import {
   Button,
   Container,
   FormControlLabel,
-  FormGroup,
   IconButton,
-  List,
-  ListItem,
   Menu,
   MenuItem,
   Switch,
   Toolbar,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -39,22 +35,16 @@ const NavBar = ({ setDarkMode }: Props) => {
   const [checkLabel, setCheckLabel] = useState("Dark mode");
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   function toggleCheck(event: React.ChangeEvent<HTMLInputElement>) {
     setIsChecked(event.target.checked);
@@ -71,7 +61,7 @@ const NavBar = ({ setDarkMode }: Props) => {
   );
 
   return (
-    <AppBar position="sticky" sx={{ mb: 4 }}>
+    <AppBar position="sticky" >
       <Container maxWidth="xl">
         <Toolbar>
           <Typography
@@ -196,11 +186,7 @@ const NavBar = ({ setDarkMode }: Props) => {
               </Badge>
             </IconButton>
 
-            {user ? (
-              <LoggedInMenu />
-            ) : (
-              <LoggedOutMenu />
-            )}
+            {user ? <LoggedInMenu /> : <LoggedOutMenu />}
           </Box>
         </Toolbar>
       </Container>

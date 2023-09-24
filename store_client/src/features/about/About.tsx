@@ -18,7 +18,7 @@ const About = () => {
   function getValidationErrors() {
     agent.TestErrors.getValidationError()
       .then(() => {
-        console.log("should have gone to valError catch");
+        
       })
       .catch((error) => setValidationErrors(error));
   }

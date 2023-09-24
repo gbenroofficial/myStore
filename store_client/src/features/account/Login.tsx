@@ -29,7 +29,7 @@ export default function Login() {
       await dispatch(signInUser(data));
       navigate(location.state?.from || "/catalogue");
     } catch (error) {
-      console.log(error);
+      
     }
   }
 

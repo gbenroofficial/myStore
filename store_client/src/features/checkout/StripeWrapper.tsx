@@ -18,7 +18,7 @@ const StripeWrapper = () => {
   useEffect(() => {
     agent.Payments.createPI()
           .then(basket => dispatch(setBasket(basket)))
-          .catch(error => console.log(error))
+          .catch(()=>{})
           .finally(() => setLoading(false));
   }, [dispatch])
   if(loading) return <LoadingBox />

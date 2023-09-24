@@ -17,9 +17,9 @@ import { addBasketItemAsync } from "../Basket/basketSlice";
 interface Props {
   product: Product;
 }
-const ProductCard = ({ product }: Props) => {  
+const ProductCard = ({ product }: Props) => {
   const { status } = useAppSelector((state) => state.basket);
-  const dispatch = useAppDispatch(); 
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -31,8 +31,8 @@ const ProductCard = ({ product }: Props) => {
         />
         <CardMedia
           component="img"
-          height = "30%"
-          sx={{ backgroundSize: "contain", width: "70%" }}
+          height="25%"
+          sx={{ backgroundSize: "contain"}}
           image={product.pictureUrl}
           alt={product.name}
         />
@@ -52,7 +52,7 @@ const ProductCard = ({ product }: Props) => {
               dispatch(addBasketItemAsync({ productId: product.id }))
             }
             size="small"
-            loading={status === ("pendingBasketAddition"+ product.id)}
+            loading={status === "pendingBasketAddition" + product.id}
           >
             Add to cart
           </LoadingButton>
