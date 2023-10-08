@@ -12,6 +12,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /publish
 COPY --from=build-env /publish .
 
-EXPOSE 80
+EXPOSE 8080
 ENTRYPOINT [ "dotnet", "API.dll" ]
 

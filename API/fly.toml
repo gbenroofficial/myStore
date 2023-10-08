@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for sosostore on 2023-10-08T04:20:11-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "sosostore"
+primary_region = "lhr"
+
+[build]
+  image = "smesh005/soso_store"
+
+[env]
+  ASPNETCORE_URLS = "http://+:8080"
+  StripeSettings__PublicKey="pk_test_51Nq9drKqht93pFY1Hp7pD4O2wweQB09zRIMt2LX7eclZYB0D9sfdwb3cwuxSWTq4RLc7Fnnn11V1JfOEJKVpDbHl00c6d9LeQH"
+
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
