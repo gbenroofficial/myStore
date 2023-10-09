@@ -1,5 +1,5 @@
 import { TextField, debounce } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";
 import { setProductParams } from "./catalogueSlice";
 

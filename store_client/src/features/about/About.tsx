@@ -9,7 +9,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import agent from "../../App/api/agent";
 
 const About = () => {
@@ -31,25 +31,25 @@ const About = () => {
       <ButtonGroup fullWidth>
         <Button
           variant="contained"
-          onClick={() => agent.TestErrors.get400Error().catch((error) => {})}
+          onClick={() => agent.TestErrors.get400Error().catch(() => {})}
         >
           Test 400 error
         </Button>
         <Button
           variant="contained"
-          onClick={() => agent.TestErrors.get401Error().catch((error) => {})}
+          onClick={() => agent.TestErrors.get401Error().catch(() => {})}
         >
           Test 401 error
         </Button>
         <Button
           variant="contained"
-          onClick={() => agent.TestErrors.get404Error().catch((error) => {})}
+          onClick={() => agent.TestErrors.get404Error().catch(() => {})}
         >
           Test 404 error
         </Button>
         <Button
           variant="contained"
-          onClick={() => agent.TestErrors.get500Error().catch((error) => {})}
+          onClick={() => agent.TestErrors.get500Error().catch(() => {})}
         >
           Test 500 error
         </Button>

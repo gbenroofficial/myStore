@@ -1,4 +1,4 @@
-import React from "react";
+
 import { MetaData } from "../Models/Pagination";
 import { Box, Pagination, Typography } from "@mui/material";
 
@@ -23,7 +23,7 @@ const PaginationBox = ({ metaData, onChange }: Props) => {
           count={totalPages}
           page={currentPage}
           shape="rounded"
-          onChange={(e, page) => onChange(page)}
+          onChange={(_e, page) => onChange(page)}
         />
       </Box>
     </>

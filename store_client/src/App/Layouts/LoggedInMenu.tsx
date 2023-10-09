@@ -1,5 +1,4 @@
 import {
-  Box,
   Tooltip,
   IconButton,
   Avatar,

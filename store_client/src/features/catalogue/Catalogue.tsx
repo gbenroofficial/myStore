@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import ProductList from "./ProductList";
 import LoadingBox from "../../App/Layouts/LoadingBox";
 import { useAppDispatch, useAppSelector } from "../../App/store/configureStore";

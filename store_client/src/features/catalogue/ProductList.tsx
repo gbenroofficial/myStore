@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import React from "react";
 import { Product } from "../../App/Models/Product";
 import ProductCard from "./ProductCard";
 import { useAppSelector } from "../../App/store/configureStore";

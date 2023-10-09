@@ -6,7 +6,7 @@ import { store } from "../store/configureStore";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1500));
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
@@ -20,7 +20,7 @@ axios.interceptors.request.use((request) => {
 
 axios.interceptors.response.use(
   async function (response) {
-    if(process.env.NODE_ENV ==="development"){
+    if(import.meta.env.DEV){
       await sleep();
     }
     
