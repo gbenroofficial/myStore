@@ -30,11 +30,9 @@ const ProductCard = ({ product }: Props) => {
           titleTypographyProps={{ sx: { fontWeight: "bold" } }}
         />
         <CardMedia
-          component="img"
-          height="25%"
-          sx={{ backgroundSize: "contain"}}
+          sx={{ height:140, backgroundSize: "contain"}}
           image={product.pictureUrl}
-          alt={product.name}
+          title={product.name}
         />
         <CardContent>
           <Typography>
