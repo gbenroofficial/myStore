@@ -52,6 +52,7 @@ function App() {
         />
         <CssBaseline />
         <NavBar setDarkMode={setDarkMode} />
+        testing
         {loading ? (
           <LoadingBox message="Initialising application..." />
         ) : location.pathname === "/" ? (
