@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import { Container, CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingBox from "./LoadingBox";
@@ -10,7 +10,6 @@ import { useAppDispatch } from "../store/configureStore";
 import { getBasketAsync } from "../../features/Basket/basketSlice";
 import { getCurrentUser } from "../../features/account/accountSlice";
 
-import Catalogue from "../../features/catalogue/Catalogue";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -56,7 +55,7 @@ function App() {
         {loading ? (
           <LoadingBox message="Initialising application..." />
         ) : location.pathname === "/" ? (
-          <Catalogue />
+          <Navigate to="/catalogue" replace={true}/>
         ) : (
           <Container maxWidth="xl" sx={{ mt: 4 }}>
             <Outlet />
