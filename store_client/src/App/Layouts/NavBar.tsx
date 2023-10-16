@@ -21,7 +21,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LoggedOutMenu from "./LoggedOutMenu";
 
 const sectionsList = [
-  { title: "home", path: "/" },
   { title: "catalogue", path: "/catalogue" },
   { title: "about", path: "/about" },
   { title: "contact", path: "/contact" },

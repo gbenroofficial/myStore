@@ -9,7 +9,8 @@ import LoadingBox from "./LoadingBox";
 import { useAppDispatch } from "../store/configureStore";
 import { getBasketAsync } from "../../features/Basket/basketSlice";
 import { getCurrentUser } from "../../features/account/accountSlice";
-import HomePage from "../../features/homePage/HomePage";
+
+import Catalogue from "../../features/catalogue/Catalogue";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -55,7 +56,7 @@ function App() {
         {loading ? (
           <LoadingBox message="Initialising application..." />
         ) : location.pathname === "/" ? (
-          <HomePage />
+          <Catalogue />
         ) : (
           <Container maxWidth="xl" sx={{ mt: 4 }}>
             <Outlet />
